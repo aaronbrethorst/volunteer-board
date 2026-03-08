@@ -24,6 +24,9 @@ Manages the platform. Can moderate content, manage users, and oversee the system
 - **GitHub OAuth** for login and identity verification (via OmniAuth)
   - Used to verify a user's association with a GitHub organization or their profile identity
   - Users can link their GitHub account after signup or sign in directly via GitHub
+- **LinkedIn OAuth** for identity verification (via OmniAuth)
+  - Used to verify a volunteer's professional identity
+  - Users can link their LinkedIn account after signup or sign in directly via LinkedIn
 - User profile with name, bio, links (GitHub, LinkedIn, portfolio)
 - No role selection at signup — any user can create orgs and volunteer
 
@@ -71,7 +74,7 @@ These are explicitly **out of scope** for initial launch to keep time-to-market 
 - **Application flow** with cover letter / resume upload (interest expression is enough for MVP)
 - **Skills matching / recommendations** (algorithmic matching)
 - **Reviews / endorsements** (reputation system)
-- **Google OAuth** (GitHub OAuth is in MVP; Google can come later)
+- **Google OAuth** (GitHub and LinkedIn OAuth are in MVP; Google can come later)
 - **Email notifications** (transactional emails for interest, status changes)
 - **Saved searches / bookmarks**
 - **RSS/Atom feeds** for new listings
@@ -87,7 +90,8 @@ User
   - bio :text
   - github_uid :string (unique, nullable — set when linked via OAuth)
   - github_username :string
-  - linkedin_url :string
+  - linkedin_uid :string (unique, nullable — set when linked via OAuth)
+  - linkedin_username :string
   - portfolio_url :string
   - site_admin :boolean (default: false)
   - has_many :memberships
@@ -135,7 +139,7 @@ Interest
 | Decision | Choice | Rationale |
 |---|---|---|
 | Database | PostgreSQL (all environments) | Production-ready from day one; enables pg_search, proper constraints |
-| Auth | `has_authentication` (Rails 8) + OmniAuth (GitHub) | Built-in password auth plus GitHub OAuth for identity verification |
+| Auth | `has_authentication` (Rails 8) + OmniAuth (GitHub, LinkedIn) | Built-in password auth plus OAuth for identity verification |
 | Rich text | Action Text | Ships with Rails, handles descriptions well |
 | File uploads | Active Storage (local disk for dev, S3 for prod) | Ships with Rails |
 | Search | `pg_search` or `WHERE ... ILIKE` | Postgres-native full-text search |
