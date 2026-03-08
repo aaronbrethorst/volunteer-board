@@ -143,9 +143,10 @@ Interest
 | Rich text | Action Text | Ships with Rails, handles descriptions well |
 | File uploads | Active Storage (local disk for dev, S3 for prod) | Ships with Rails |
 | Search | `pg_search` or `WHERE ... ILIKE` | Postgres-native full-text search |
-| Pagination | Pagy or `will_paginate` | Lightweight, well-supported |
-| CSS | Tailwind CSS or Pico CSS via CDN | Fast to style without a build step |
+| Pagination | Pagy | Lightweight, fast, well-supported |
+| CSS | Tailwind CSS | Utility-first CSS framework |
 | JS | Turbo + Stimulus (Hotwire) | Already configured in Rails 8 |
+| Testing | RSpec | Preferred over Minitest; use FactoryBot + Shoulda Matchers |
 | Authorization | Simple `before_action` checks | No Pundit/CanCanCan needed; check membership + site_admin |
 
 ## Page Map
