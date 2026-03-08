@@ -8,13 +8,10 @@ This isn't just for engineers. UX designers, product managers, biz dev folks, sa
 
 ## User Roles
 
-### 1. Volunteer (Job Seeker)
-A tech professional looking for volunteer opportunities. Can browse listings, express interest, and manage their profile.
+### 1. User
+Any authenticated user can both create/manage organizations and volunteer for positions. There is no separate "org admin" vs "volunteer" role — every user has full access to both sides of the platform.
 
-### 2. Organization Admin
-Represents a project or organization posting volunteer positions. Can create an org profile, post listings, and review interested volunteers.
-
-### 3. Site Admin
+### 2. Site Admin
 Manages the platform. Can moderate content, manage users, and oversee the system.
 
 ## MVP Features
@@ -24,16 +21,20 @@ Manages the platform. Can moderate content, manage users, and oversee the system
 #### Authentication & Accounts
 - Sign up / sign in / sign out (Rails 8 built-in `has_authentication`)
 - Email and password based auth
+- **GitHub OAuth** for login and identity verification (via OmniAuth)
+  - Used to verify a user's association with a GitHub organization or their profile identity
+  - Users can link their GitHub account after signup or sign in directly via GitHub
 - User profile with name, bio, links (GitHub, LinkedIn, portfolio)
-- Role selection during signup: Volunteer or Organization Admin
+- No role selection at signup — any user can create orgs and volunteer
 
 #### Organizations
 - Create and edit an organization profile (name, description, website, logo, repo URL)
-- An organization belongs to the user who created it
+- An organization belongs to the user who created it (any user can create one)
+- Users can belong to multiple organizations (via memberships)
 - Public org profile page listing all active positions
 
 #### Listings (Volunteer Positions)
-- CRUD for listings, scoped to the org admin who owns the organization
+- CRUD for listings, scoped to org members
 - Fields:
   - **Title** (e.g. "UX Researcher", "Rails Backend Developer", "Technical Writer")
   - **Discipline/Category** (Engineering, UX/Design, Product, Marketing, Biz Dev, Sales, DevOps, Documentation, Community, Other)
@@ -52,9 +53,9 @@ Manages the platform. Can moderate content, manage users, and oversee the system
 - Paginated results
 
 #### Expressing Interest
-- Logged-in volunteers can click "I'm Interested" on a listing
-- Org admin sees a list of interested volunteers (with links to their profiles) on each listing
-- Volunteer sees a list of listings they've expressed interest in on their dashboard
+- Logged-in users can click "I'm Interested" on a listing
+- Org members see a list of interested users (with links to their profiles) on each listing
+- Users see a list of listings they've expressed interest in on their dashboard
 
 #### Basic Admin
 - Site admin role (seeded or set via console)
@@ -70,9 +71,8 @@ These are explicitly **out of scope** for initial launch to keep time-to-market 
 - **Application flow** with cover letter / resume upload (interest expression is enough for MVP)
 - **Skills matching / recommendations** (algorithmic matching)
 - **Reviews / endorsements** (reputation system)
-- **OAuth** (GitHub, Google login)
+- **Google OAuth** (GitHub OAuth is in MVP; Google can come later)
 - **Email notifications** (transactional emails for interest, status changes)
-- **Org team members** (multiple admins per org)
 - **Saved searches / bookmarks**
 - **RSS/Atom feeds** for new listings
 - **API** (JSON endpoints for integrations)
@@ -85,13 +85,21 @@ User
   - password_digest :string
   - name :string
   - bio :text
-  - github_url :string
+  - github_uid :string (unique, nullable — set when linked via OAuth)
+  - github_username :string
   - linkedin_url :string
   - portfolio_url :string
-  - role :integer (enum: volunteer, org_admin, site_admin)
-  - has_many :organizations
+  - site_admin :boolean (default: false)
+  - has_many :memberships
+  - has_many :organizations, through: :memberships
   - has_many :interests
   - has_many :interested_listings, through: :interests, source: :listing
+
+Membership
+  - belongs_to :user
+  - belongs_to :organization
+  - role :integer (enum: owner, member; default: member)
+  - unique constraint on [user_id, organization_id]
 
 Organization
   - name :string (required)
@@ -99,7 +107,8 @@ Organization
   - website_url :string
   - repo_url :string
   - logo (Active Storage attachment)
-  - belongs_to :user (the admin/creator)
+  - has_many :memberships
+  - has_many :users, through: :memberships
   - has_many :listings
 
 Listing
@@ -112,27 +121,28 @@ Listing
   - has_rich_text :description (Action Text)
   - belongs_to :organization
   - has_many :interests
-  - has_many :interested_volunteers, through: :interests, source: :user
+  - has_many :interested_users, through: :interests, source: :user
 
 Interest
   - belongs_to :user
   - belongs_to :listing
   - unique constraint on [user_id, listing_id]
-  - timestamps (so org admin can see when interest was expressed)
+  - timestamps (so org members can see when interest was expressed)
 ```
 
 ## Key Technical Decisions
 
 | Decision | Choice | Rationale |
 |---|---|---|
-| Auth | `has_authentication` (Rails 8) | Built-in, no gem needed |
+| Database | PostgreSQL (all environments) | Production-ready from day one; enables pg_search, proper constraints |
+| Auth | `has_authentication` (Rails 8) + OmniAuth (GitHub) | Built-in password auth plus GitHub OAuth for identity verification |
 | Rich text | Action Text | Ships with Rails, handles descriptions well |
 | File uploads | Active Storage (local disk for dev, S3 for prod) | Ships with Rails |
-| Search | `WHERE ... LIKE` with SQLite | Good enough for MVP; swap to pg_search or Meilisearch later |
+| Search | `pg_search` or `WHERE ... ILIKE` | Postgres-native full-text search |
 | Pagination | Pagy or `will_paginate` | Lightweight, well-supported |
 | CSS | Tailwind CSS or Pico CSS via CDN | Fast to style without a build step |
 | JS | Turbo + Stimulus (Hotwire) | Already configured in Rails 8 |
-| Authorization | Simple `before_action` checks | No Pundit/CanCanCan needed for 3 roles |
+| Authorization | Simple `before_action` checks | No Pundit/CanCanCan needed; check membership + site_admin |
 
 ## Page Map
 
@@ -142,13 +152,12 @@ Interest
 | Listing detail | `GET /listings/:id` | Public |
 | Sign up | `GET /signup` | Public |
 | Sign in | `GET /signin` | Public |
-| Volunteer dashboard | `GET /dashboard` | Volunteer |
-| Org admin dashboard | `GET /dashboard` | Org Admin |
-| New organization | `GET /organizations/new` | Org Admin |
+| Dashboard | `GET /dashboard` | Authenticated |
+| New organization | `GET /organizations/new` | Authenticated |
 | Org profile | `GET /organizations/:id` | Public |
-| New listing | `GET /organizations/:org_id/listings/new` | Org Admin (owner) |
-| Edit listing | `GET /listings/:id/edit` | Org Admin (owner) |
-| Interested volunteers | `GET /listings/:id/interests` | Org Admin (owner) |
+| New listing | `GET /organizations/:org_id/listings/new` | Org member |
+| Edit listing | `GET /listings/:id/edit` | Org member |
+| Interested users | `GET /listings/:id/interests` | Org member |
 | Admin panel | `GET /admin` | Site Admin |
 
 ## Success Metrics (Post-Launch)
