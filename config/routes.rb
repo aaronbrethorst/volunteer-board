@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[show]
   resource :profile, only: %i[edit update] do
     resources :listings, only: :index, controller: "profile_listings"
+    resources :organizations, only: :index, controller: "profile_organizations"
   end
   resources :organizations, param: :slug, except: :destroy
   resources :organizations, param: :slug, only: [] do
@@ -14,7 +15,6 @@ Rails.application.routes.draw do
     resource :interest, only: %i[new create destroy]
     resources :interests, only: %i[show], as: :interest_details
   end
-  get "dashboard", to: "dashboard#show"
 
   namespace :admin do
     root "dashboard#show"
