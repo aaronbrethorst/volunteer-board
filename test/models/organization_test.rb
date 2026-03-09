@@ -66,6 +66,13 @@ class OrganizationTest < ActiveSupport::TestCase
     assert org.valid?
   end
 
+  test "website_url rejects URLs with trailing newlines" do
+    org = organizations(:one)
+    org.website_url = "https://example.com\njavascript:alert(1)"
+    assert_not org.valid?
+    assert_includes org.errors[:website_url], "must be a valid URL"
+  end
+
   test "repo_url must be valid URL if present" do
     org = organizations(:one)
     org.repo_url = "not-a-url"
@@ -80,6 +87,13 @@ class OrganizationTest < ActiveSupport::TestCase
 
     org.repo_url = nil
     assert org.valid?
+  end
+
+  test "repo_url rejects URLs with trailing newlines" do
+    org = organizations(:one)
+    org.repo_url = "https://github.com/example\njavascript:alert(1)"
+    assert_not org.valid?
+    assert_includes org.errors[:repo_url], "must be a valid URL"
   end
 
   test "to_param returns slug" do

@@ -87,6 +87,13 @@ class UserTest < ActiveSupport::TestCase
     assert user.valid?
   end
 
+  test "rejects portfolio_url with trailing newline injection" do
+    user = users(:one)
+    user.portfolio_url = "https://example.com\njavascript:alert(1)"
+    assert_not user.valid?
+    assert_includes user.errors[:portfolio_url], "must be a valid URL"
+  end
+
   test "site_admin defaults to false" do
     user = User.new(
       email_address: "admin@example.com",
