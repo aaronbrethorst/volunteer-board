@@ -1,0 +1,24 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">Express Interest</h1>
+    <p class="text-gray-600 mb-6">
+      <span class="font-medium"><%= @listing.title %></span> &mdash;
+      <%= @listing.organization.name %>
+    </p>
+
+    <%= form_with model: [@listing, Interest.new], url: listing_interest_path(@listing) do |f| %>
+      <div class="mb-6">
+        <%= f.label :message, "Message (optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_area :message, rows: 5, placeholder: "Tell the organization why you're interested and what you can contribute...",
+              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <%= f.submit "Submit Interest",
+              class: "bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition text-sm font-medium cursor-pointer" %>
+        <%= link_to "Cancel", listing_path(@listing),
+              class: "text-gray-600 hover:text-gray-800 text-sm font-medium" %>
+      </div>
+    <% end %>
+  </div>
+</div>

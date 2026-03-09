@@ -1,7 +1,0 @@
-<%= turbo_stream.replace "interest_listing_#{@listing.id}" do %>
-  <%= render "interests/button", listing: @listing, interested: false %>
-<% end %>
-
-<%= turbo_stream.replace "interest_count_#{@listing.id}" do %>
-  <%= render "interests/count", listing: @listing %>
-<% end %>

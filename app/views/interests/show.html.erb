@@ -1,0 +1,31 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Interest Details</h1>
+
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+        <span class="text-sm font-bold text-indigo-600"><%= @interest.user.name.first.upcase %></span>
+      </div>
+      <div>
+        <%= link_to @interest.user.name, user_path(@interest.user), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+        <p class="text-xs text-gray-500">
+          Expressed interest <%= time_ago_in_words(@interest.created_at) %> ago
+        </p>
+      </div>
+    </div>
+
+    <div class="border-t pt-4">
+      <h2 class="text-sm font-medium text-gray-500 mb-2">Message</h2>
+      <% if @interest.message.present? %>
+        <p class="text-gray-800 whitespace-pre-wrap"><%= @interest.message %></p>
+      <% else %>
+        <p class="text-gray-400 italic">No message provided</p>
+      <% end %>
+    </div>
+
+    <div class="mt-6">
+      <%= link_to "&larr; Back to listing".html_safe, listing_path(@listing),
+            class: "text-indigo-600 hover:text-indigo-800 text-sm font-medium" %>
+    </div>
+  </div>
+</div>

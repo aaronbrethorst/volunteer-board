@@ -7,6 +7,26 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     @listing = listings(:open_listing)
   end
 
+  # --- New ---
+
+  test "new redirects to sign-in when logged out and stores return URL" do
+    get new_listing_interest_path(@listing)
+    assert_redirected_to new_session_path
+  end
+
+  test "new renders form when authenticated" do
+    sign_in_as(@user)
+    get new_listing_interest_path(@listing)
+    assert_response :success
+  end
+
+  test "new redirects to listing if already interested" do
+    sign_in_as(@user)
+    Interest.create!(user: @user, listing: @listing)
+    get new_listing_interest_path(@listing)
+    assert_redirected_to listing_path(@listing)
+  end
+
   # --- Create ---
 
   test "create requires authentication" do
@@ -14,38 +34,61 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  test "create expresses interest in a listing" do
+  test "create expresses interest with a message" do
     sign_in_as(@user)
     assert_difference "Interest.count", 1 do
-      post listing_interest_path(@listing)
+      post listing_interest_path(@listing), params: { interest: { message: "I'd love to help!" } }
     end
-    assert Interest.exists?(user: @user, listing: @listing)
-  end
-
-  test "create redirects back to listing" do
-    sign_in_as(@user)
-    post listing_interest_path(@listing)
+    interest = Interest.find_by(user: @user, listing: @listing)
+    assert_equal "I'd love to help!", interest.message
     assert_redirected_to listing_path(@listing)
   end
 
-  test "create responds with turbo_stream format" do
+  test "create works without a message" do
     sign_in_as(@user)
-    post listing_interest_path(@listing), as: :turbo_stream
-    assert_response :success
+    assert_difference "Interest.count", 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "" } }
+    end
+    assert_redirected_to listing_path(@listing)
   end
 
-  test "create does not duplicate interest" do
+  test "create prevents duplicates" do
     sign_in_as(@user)
     Interest.create!(user: @user, listing: @listing)
     assert_no_difference "Interest.count" do
-      post listing_interest_path(@listing)
+      post listing_interest_path(@listing), params: { interest: { message: "duplicate" } }
     end
+    assert_redirected_to listing_path(@listing)
   end
 
   test "create returns 404 for discarded listing" do
     sign_in_as(@user)
-    post listing_interest_path(listings(:discarded_listing))
+    post listing_interest_path(listings(:discarded_listing)), params: { interest: { message: "" } }
     assert_response :not_found
+  end
+
+  # --- Show ---
+
+  test "show requires authentication" do
+    interest = Interest.create!(user: @user_two, listing: @listing)
+    get listing_interest_detail_path(@listing, interest)
+    assert_redirected_to new_session_path
+  end
+
+  test "show is accessible to org members" do
+    interest = Interest.create!(user: @user_two, listing: @listing, message: "Hello!")
+    sign_in_as(@user) # user one is a member of org one
+    get listing_interest_detail_path(@listing, interest)
+    assert_response :success
+    assert_select "p", text: "Hello!"
+  end
+
+  test "show denies non-members" do
+    listing = listings(:closed_listing) # org two
+    interest = Interest.create!(user: @user, listing: listing)
+    sign_in_as(@user) # user one is NOT a member of org two
+    get listing_interest_detail_path(listing, interest)
+    assert_redirected_to listing_path(listing)
   end
 
   # --- Destroy ---
@@ -62,20 +105,7 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
       delete listing_interest_path(@listing)
     end
     assert_not Interest.exists?(user: @user, listing: @listing)
-  end
-
-  test "destroy redirects back to listing" do
-    sign_in_as(@user)
-    Interest.create!(user: @user, listing: @listing)
-    delete listing_interest_path(@listing)
     assert_redirected_to listing_path(@listing)
-  end
-
-  test "destroy responds with turbo_stream format" do
-    sign_in_as(@user)
-    Interest.create!(user: @user, listing: @listing)
-    delete listing_interest_path(@listing), as: :turbo_stream
-    assert_response :success
   end
 
   test "destroy is a no-op when no interest exists" do

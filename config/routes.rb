@@ -9,7 +9,8 @@ Rails.application.routes.draw do
     resources :listings, only: %i[new create], module: :organizations
   end
   resources :listings, only: %i[show edit update] do
-    resource :interest, only: %i[create destroy]
+    resource :interest, only: %i[new create destroy]
+    resources :interests, only: %i[show], as: :interest_details
   end
   get "dashboard", to: "dashboard#show"
 

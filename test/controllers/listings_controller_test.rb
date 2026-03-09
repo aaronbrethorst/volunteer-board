@@ -169,7 +169,7 @@ class ListingsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user_two)
     get listing_path(@listing)
     assert_response :success
-    assert_select "button", text: "I'm Interested"
+    assert_select "a", text: "I'm Interested"
   end
 
   test "show displays Remove Interest button when already interested" do
