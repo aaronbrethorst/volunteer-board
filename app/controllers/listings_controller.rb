@@ -5,6 +5,7 @@ class ListingsController < ApplicationController
   before_action :require_membership, only: %i[edit update]
 
   def show
+    @interests = @listing.interests.includes(:user)
   end
 
   def edit

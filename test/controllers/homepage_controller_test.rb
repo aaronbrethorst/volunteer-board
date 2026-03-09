@@ -86,6 +86,16 @@ class HomepageControllerTest < ActionDispatch::IntegrationTest
     assert_match(/no listings/i, response.body)
   end
 
+  test "search escapes SQL LIKE wildcard characters" do
+    # Searching for a literal "%" should NOT match all listings.
+    # Before the fix, "%#{"%"}%" becomes "%%%" which matches everything in LIKE.
+    get root_path, params: { query: "%" }
+    assert_response :success
+    # The open_listing title is "Rails Backend Developer" which does not
+    # contain a literal "%" — it should NOT appear in results.
+    assert_no_match(/#{Regexp.escape(@open_listing.title)}/, response.body)
+  end
+
   # --- Discipline filter ---
 
   test "discipline filter shows matching listings" do

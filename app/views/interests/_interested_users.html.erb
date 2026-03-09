@@ -1,15 +1,15 @@
-<% if listing.interested_users.any? %>
+<% if interests.any? %>
   <div class="border-t mt-8 pt-6">
     <h2 class="text-lg font-semibold text-gray-900 mb-3">Interested Volunteers</h2>
     <ul class="space-y-2">
-      <% listing.interested_users.each do |user| %>
+      <% interests.each do |interest| %>
         <li class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-            <span class="text-sm font-bold text-indigo-600"><%= user.name.first.upcase %></span>
+            <span class="text-sm font-bold text-indigo-600"><%= interest.user.name.first.upcase %></span>
           </div>
-          <%= link_to user.name, user_path(user), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+          <%= link_to interest.user.name, user_path(interest.user), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
           <span class="text-xs text-gray-500">
-            expressed interest <%= time_ago_in_words(user.interests.find_by(listing: listing).created_at) %> ago
+            expressed interest <%= time_ago_in_words(interest.created_at) %> ago
           </span>
         </li>
       <% end %>

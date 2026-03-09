@@ -1,6 +1,6 @@
 class Admin::OrganizationsController < Admin::BaseController
   def index
-    @organizations = Organization.order(created_at: :desc)
+    @pagy, @organizations = pagy(Organization.order(created_at: :desc))
   end
 
   def update
@@ -13,5 +13,7 @@ class Admin::OrganizationsController < Admin::BaseController
     end
 
     redirect_to admin_organizations_path, notice: "Organization updated."
+  rescue ActiveRecord::RecordInvalid
+    redirect_to admin_organizations_path, alert: "Failed to update organization."
   end
 end

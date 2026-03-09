@@ -188,6 +188,35 @@ class ListingsControllerTest < ActionDispatch::IntegrationTest
     assert_match @user_two.name, response.body
   end
 
+  test "show does not N+1 query for interested users" do
+    sign_in_as(@user_one)
+    # Create 3 interested users
+    user_three = User.create!(name: "User Three", email_address: "three@example.com", password: "password123")
+    user_four = User.create!(name: "User Four", email_address: "four@example.com", password: "password123")
+    Interest.create!(user: @user_two, listing: @listing)
+    Interest.create!(user: user_three, listing: @listing)
+    Interest.create!(user: user_four, listing: @listing)
+
+    # Warm up (load schema, etc.)
+    get listing_path(@listing)
+    count_with_three = count_queries { get listing_path(@listing) }
+
+    # Add 2 more interested users
+    user_five = User.create!(name: "User Five", email_address: "five@example.com", password: "password123")
+    user_six = User.create!(name: "User Six", email_address: "six@example.com", password: "password123")
+    Interest.create!(user: user_five, listing: @listing)
+    Interest.create!(user: user_six, listing: @listing)
+
+    count_with_five = count_queries { get listing_path(@listing) }
+
+    assert_response :success
+    assert_match "User Five", response.body
+    assert_match "User Six", response.body
+    # If eager-loaded, adding more users should not increase query count
+    assert_equal count_with_three, count_with_five,
+      "Query count grew from #{count_with_three} to #{count_with_five} with more users (N+1)"
+  end
+
   test "show does not display interested users for non-members" do
     non_member = User.create!(name: "Non Member", email_address: "nonmember@example.com", password: "password123")
     sign_in_as(non_member)

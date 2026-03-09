@@ -34,4 +34,10 @@
       <p class="text-gray-500 text-center py-8">No organizations yet.</p>
     <% end %>
   </div>
+
+  <% if @pagy.last > 1 %>
+    <div class="mt-8">
+      <%== @pagy.series_nav(id: "organizations-pagination", aria_label: "Organizations pagination") %>
+    </div>
+  <% end %>
 </div>

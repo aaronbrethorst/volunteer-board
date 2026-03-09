@@ -98,4 +98,49 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_respond_to org, :users
     assert_includes org.users, users(:one)
   end
+
+  test "rejects logo with invalid content type" do
+    org = organizations(:one)
+    org.logo.attach(
+      io: StringIO.new("fake file content"),
+      filename: "malicious.exe",
+      content_type: "text/plain"
+    )
+    assert_not org.valid?
+    assert org.errors[:logo].any? { |msg| msg.include?("not a valid file type") || msg.include?("content type") }
+  end
+
+  test "rejects logo exceeding 5MB" do
+    org = organizations(:one)
+    org.logo.attach(
+      io: StringIO.new("x" * (6.megabytes)),
+      filename: "huge-image.png",
+      content_type: "image/png"
+    )
+    assert_not org.valid?
+    assert org.errors[:logo].any? { |msg| msg.include?("size") || msg.include?("too large") || msg.include?("5 MB") }
+  end
+
+  test "accepts logo with valid content type and size" do
+    org = organizations(:one)
+    org.logo.attach(
+      io: StringIO.new("GIF89a" + "\x00" * 100),
+      filename: "logo.gif",
+      content_type: "image/gif"
+    )
+    assert org.valid?, "Expected organization with valid logo to be valid, but got errors: #{org.errors.full_messages}"
+  end
+
+  test "accepts logo with each valid image content type" do
+    %w[image/png image/jpeg image/gif image/webp].each do |content_type|
+      org = organizations(:one)
+      org.logo.attach(
+        io: StringIO.new("\x00" * 100),
+        filename: "logo.#{content_type.split('/').last}",
+        content_type: content_type
+      )
+      assert org.valid?, "Expected #{content_type} to be accepted but got errors: #{org.errors.full_messages}"
+      org.logo.purge
+    end
+  end
 end

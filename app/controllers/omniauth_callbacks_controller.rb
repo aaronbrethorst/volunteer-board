@@ -1,5 +1,8 @@
 class OmniauthCallbacksController < ApplicationController
   allow_unauthenticated_access only: %i[create failure]
+  rate_limit to: 10, within: 1.minute, only: :create, with: -> { redirect_to new_session_path, alert: "Try again later." }
+
+  ALLOWED_PROVIDERS = %w[github linkedin].freeze
 
   def create
     auth = request.env["omniauth.auth"]
@@ -18,14 +21,22 @@ class OmniauthCallbacksController < ApplicationController
   def destroy
     provider = params[:provider]
 
-    case provider
-    when "github"
-      Current.user.update!(github_uid: nil, github_username: nil)
-    when "linkedin"
-      Current.user.update!(linkedin_uid: nil, linkedin_username: nil)
+    unless ALLOWED_PROVIDERS.include?(provider)
+      return redirect_to edit_profile_path, alert: "Unknown provider. Not supported."
     end
 
-    redirect_to edit_profile_path, notice: "#{provider_display_name(provider)} account unlinked."
+    success = case provider
+    when "github"
+      Current.user.update(github_uid: nil, github_username: nil)
+    when "linkedin"
+      Current.user.update(linkedin_uid: nil, linkedin_username: nil)
+    end
+
+    if success
+      redirect_to edit_profile_path, notice: "#{provider_display_name(provider)} account unlinked."
+    else
+      redirect_to edit_profile_path, alert: "Failed to unlink #{provider_display_name(provider)} account."
+    end
   end
 
   def failure
@@ -36,7 +47,23 @@ class OmniauthCallbacksController < ApplicationController
   private
 
   def sign_in_or_create(auth)
-    user = find_user_by_oauth(auth) || create_user_from_oauth(auth)
+    user = find_user_by_oauth(auth)
+
+    unless user
+      result = create_user_from_oauth(auth)
+
+      case result
+      in { user: created_user }
+        user = created_user
+      in { error: :email_taken }
+        return redirect_to new_session_path, alert: "An account with this email already exists. Please sign in instead."
+      in { error: :validation_failed, message: msg }
+        Rails.logger.error("OAuth user creation failed: #{msg}")
+        return redirect_to new_session_path, alert: "Authentication failed. Please try again."
+      in { error: _ }
+        return redirect_to new_session_path, alert: "Authentication failed. Please try again."
+      end
+    end
 
     if user&.persisted?
       start_new_session_for(user)
@@ -56,20 +83,24 @@ class OmniauthCallbacksController < ApplicationController
       return redirect_to edit_profile_path, alert: "That #{provider_display_name(provider)} account is already linked to another user."
     end
 
-    case provider
+    success = case provider
     when "github"
-      Current.user.update!(
+      Current.user.update(
         github_uid: uid,
         github_username: auth.info.nickname
       )
     when "linkedin"
-      Current.user.update!(
+      Current.user.update(
         linkedin_uid: uid,
         linkedin_username: auth.info.try(:nickname) || linkedin_username_from(auth)
       )
     end
 
-    redirect_to edit_profile_path, notice: "#{provider_display_name(provider)} account linked successfully."
+    if success
+      redirect_to edit_profile_path, notice: "#{provider_display_name(provider)} account linked successfully."
+    else
+      redirect_to edit_profile_path, alert: "Failed to link #{provider_display_name(provider)} account."
+    end
   end
 
   def find_user_by_oauth(auth)
@@ -85,7 +116,7 @@ class OmniauthCallbacksController < ApplicationController
     email = auth.info.email
     name = auth.info.name || "#{auth.info.first_name} #{auth.info.last_name}".strip
 
-    return nil if email.blank?
+    return { error: :missing_email } if email.blank?
 
     attrs = {
       email_address: email,
@@ -102,22 +133,14 @@ class OmniauthCallbacksController < ApplicationController
       attrs[:linkedin_username] = auth.info.try(:nickname) || linkedin_username_from(auth)
     end
 
-    User.create!(attrs)
-  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
-    # User with this email already exists — find and link
-    user = User.find_by(email_address: email)
-    if user
-      link_oauth_to_user(user, auth)
-      user
-    end
-  end
-
-  def link_oauth_to_user(user, auth)
-    case auth.provider
-    when "github"
-      user.update!(github_uid: auth.uid, github_username: auth.info.nickname)
-    when "linkedin"
-      user.update!(linkedin_uid: auth.uid, linkedin_username: auth.info.try(:nickname) || linkedin_username_from(auth))
+    { user: User.create!(attrs) }
+  rescue ActiveRecord::RecordNotUnique
+    { error: :email_taken }
+  rescue ActiveRecord::RecordInvalid => e
+    if e.message.include?("Email address") && e.message.include?("taken")
+      { error: :email_taken }
+    else
+      { error: :validation_failed, message: e.message }
     end
   end
 

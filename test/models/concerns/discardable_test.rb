@@ -39,4 +39,15 @@ class DiscardableTest < ActiveSupport::TestCase
     assert @kept_org.kept?
     assert_not @discarded_org.kept?
   end
+
+  test "discard raises on invalid record" do
+    # Make the record invalid by blanking a required field
+    @kept_org.name = ""
+    assert_raises(ActiveRecord::RecordInvalid) { @kept_org.discard }
+  end
+
+  test "undiscard raises on invalid record" do
+    @discarded_org.name = ""
+    assert_raises(ActiveRecord::RecordInvalid) { @discarded_org.undiscard }
+  end
 end

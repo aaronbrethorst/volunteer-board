@@ -56,17 +56,17 @@ class ListingTest < ActiveSupport::TestCase
 
   # --- Scopes ---
 
-  test "open scope returns only open and kept listings" do
-    open_listings = Listing.open
-    assert_includes open_listings, listings(:open_listing)
-    assert_not_includes open_listings, listings(:filled_listing)
-    assert_not_includes open_listings, listings(:closed_listing)
-    assert_not_includes open_listings, listings(:discarded_listing)
+  test "available scope returns only open and kept listings" do
+    available_listings = Listing.available
+    assert_includes available_listings, listings(:open_listing)
+    assert_not_includes available_listings, listings(:filled_listing)
+    assert_not_includes available_listings, listings(:closed_listing)
+    assert_not_includes available_listings, listings(:discarded_listing)
   end
 
-  test "open scope excludes discarded listings" do
+  test "available scope excludes discarded listings" do
     @listing.discard
-    assert_not_includes Listing.open, @listing
+    assert_not_includes Listing.available, @listing
   end
 
   test "chronologically orders by created_at asc" do

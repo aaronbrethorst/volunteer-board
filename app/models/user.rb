@@ -11,6 +11,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, if: -> { password.present? || new_record? }
+  validates :portfolio_url, format: { with: /\Ahttps?:\/\/.+/i, message: "must be a valid URL" }, allow_blank: true
 
   def github_linked?
     github_uid.present?

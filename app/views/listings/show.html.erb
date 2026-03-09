@@ -76,7 +76,7 @@
     </div>
 
     <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
-      <%= render "interests/interested_users", listing: @listing %>
+      <%= render "interests/interested_users", listing: @listing, interests: @interests %>
     <% end %>
 
     <div class="border-t mt-8 pt-6">

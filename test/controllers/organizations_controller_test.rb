@@ -16,6 +16,16 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match organizations(:discarded_org).name, response.body
   end
 
+  test "index paginates organizations" do
+    25.times do |i|
+      Organization.create!(name: "Paginated Org #{i}", slug: "paginated-org-#{i}")
+    end
+
+    get organizations_path
+    assert_response :success
+    assert_select "nav[aria-label]"
+  end
+
   # --- Public profile page ---
 
   test "show returns 404 for discarded org" do
@@ -79,6 +89,28 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     membership = org.memberships.find_by(user: @user)
     assert_not_nil membership
     assert membership.owner?
+  end
+
+  test "create rolls back organization if membership creation fails" do
+    sign_in_as(@user)
+
+    # Temporarily make all membership saves fail
+    Membership.class_eval { validate :always_fail; def always_fail = errors.add(:base, "forced failure") }
+
+    assert_no_difference [ "Organization.count", "Membership.count" ] do
+      post organizations_path, params: { organization: { name: "Doomed Org", description: "Should not persist" } }
+    end
+    assert_response :unprocessable_entity
+  ensure
+    # Remove the temporary validation
+    Membership._validators.delete(:always_fail)
+    Membership._validate_callbacks.each do |cb|
+      if cb.filter == :always_fail
+        Membership._validate_callbacks.delete(cb)
+        break
+      end
+    end
+    Membership.remove_method(:always_fail) if Membership.method_defined?(:always_fail)
   end
 
   test "create renders new on validation failure" do

@@ -223,4 +223,87 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to edit_profile_path
     assert_match(/already linked/, flash[:alert])
   end
+
+  # --- Issue 1: OAuth account takeover via email collision ---
+
+  test "does not auto-link OAuth to existing user with same email" do
+    existing_user = users(:one) # one@example.com
+
+    attacker_auth = OmniAuth::AuthHash.new(
+      provider: "github",
+      uid: "attacker-uid-999",
+      info: {
+        email: existing_user.email_address,
+        name: "Attacker",
+        nickname: "attacker"
+      }
+    )
+    OmniAuth.config.mock_auth[:github] = attacker_auth
+
+    assert_no_difference "User.count" do
+      get "/auth/github/callback"
+    end
+
+    existing_user.reload
+    assert_nil existing_user.github_uid, "Should NOT auto-link attacker's OAuth to victim's account"
+    assert_redirected_to new_session_path
+    assert_match(/account.*already exists/i, flash[:alert])
+  end
+
+  # --- Issue 7: Broad RecordInvalid rescue ---
+
+  test "logs validation errors other than email uniqueness during OAuth signup" do
+    # OAuth with blank name and valid email that doesn't exist yet
+    blank_name_auth = OmniAuth::AuthHash.new(
+      provider: "github",
+      uid: "blank-name-uid",
+      info: {
+        email: "brandnew@example.com",
+        name: "",
+        nickname: ""
+      }
+    )
+    OmniAuth.config.mock_auth[:github] = blank_name_auth
+
+    get "/auth/github/callback"
+
+    # Should redirect to sign-in with an informative message, not silently succeed
+    # and not raise a 500 error
+    assert_response :redirect
+  end
+
+  # --- Issue 8: Unrescued update! in link_account and destroy ---
+
+  test "link_account uses update instead of update! to avoid 500 errors" do
+    source = File.read(Rails.root.join("app/controllers/omniauth_callbacks_controller.rb"))
+    link_account_method = source[/def link_account.*?(?=\n  def |\nend)/m]
+    assert_not_nil link_account_method, "link_account method should exist"
+    assert_not_includes link_account_method, "update!", "link_account should use update (not update!) to handle failures gracefully"
+  end
+
+  test "destroy uses update instead of update! to avoid 500 errors" do
+    source = File.read(Rails.root.join("app/controllers/omniauth_callbacks_controller.rb"))
+    destroy_method = source[/def destroy.*?(?=\n  def |\n\n  private)/m]
+    assert_not_nil destroy_method, "destroy method should exist"
+    assert_not_includes destroy_method, "update!", "destroy should use update (not update!) to handle failures gracefully"
+  end
+
+  # --- Issue 11: Rate limiting on OAuth callback ---
+
+  test "controller has rate_limit configured for create action" do
+    source = File.read(Rails.root.join("app/controllers/omniauth_callbacks_controller.rb"))
+    assert_match(/rate_limit\b.*\bonly:\s*:create\b/m, source, "Controller should have rate_limit on create action")
+  end
+
+  # --- Issue 12: Unknown provider in destroy ---
+
+  test "returns error when unlinking an unknown provider" do
+    user = users(:one)
+    sign_in_as(user)
+
+    delete "/auth/garbage"
+
+    assert_redirected_to edit_profile_path
+    assert_match(/not supported|unknown/i, flash[:alert])
+  end
 end

@@ -61,6 +61,32 @@ class UserTest < ActiveSupport::TestCase
     assert_includes user.errors[:password], "is too short (minimum is 8 characters)"
   end
 
+  test "rejects javascript: portfolio_url" do
+    user = users(:one)
+    user.portfolio_url = "javascript:alert(document.cookie)"
+    assert_not user.valid?
+    assert_includes user.errors[:portfolio_url], "must be a valid URL"
+  end
+
+  test "rejects data: portfolio_url" do
+    user = users(:one)
+    user.portfolio_url = "data:text/html,<script>alert(1)</script>"
+    assert_not user.valid?
+    assert_includes user.errors[:portfolio_url], "must be a valid URL"
+  end
+
+  test "accepts https portfolio_url" do
+    user = users(:one)
+    user.portfolio_url = "https://example.com/portfolio"
+    assert user.valid?
+  end
+
+  test "accepts blank portfolio_url" do
+    user = users(:one)
+    user.portfolio_url = ""
+    assert user.valid?
+  end
+
   test "site_admin defaults to false" do
     user = User.new(
       email_address: "admin@example.com",

@@ -5,7 +5,7 @@ class OrganizationsController < ApplicationController
   before_action :require_owner, only: %i[edit update]
 
   def index
-    @organizations = Organization.kept.order(created_at: :desc)
+    @pagy, @organizations = pagy(Organization.kept.with_attached_logo.order(created_at: :desc))
   end
 
   def show
@@ -18,12 +18,13 @@ class OrganizationsController < ApplicationController
   def create
     @organization = Organization.new(organization_params)
 
-    if @organization.save
+    ActiveRecord::Base.transaction do
+      @organization.save!
       @organization.memberships.create!(user: Current.user, role: :owner)
-      redirect_to organization_path(@organization.slug), notice: "Organization was successfully created."
-    else
-      render :new, status: :unprocessable_entity
     end
+    redirect_to organization_path(@organization.slug), notice: "Organization was successfully created."
+  rescue ActiveRecord::RecordInvalid
+    render :new, status: :unprocessable_entity
   end
 
   def edit

@@ -40,4 +40,10 @@
       </tbody>
     </table>
   </div>
+
+  <% if @pagy.last > 1 %>
+    <div class="mt-8">
+      <%== @pagy.series_nav(id: "admin-organizations-pagination", aria_label: "Admin organizations pagination") %>
+    </div>
+  <% end %>
 </div>

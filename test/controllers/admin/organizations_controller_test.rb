@@ -40,6 +40,21 @@ class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert org.kept?
   end
 
+  test "index paginates organizations" do
+    sign_in_as(users(:one))
+
+    # Create enough organizations to exceed one page (Pagy default is 20)
+    25.times do |i|
+      Organization.create!(name: "Paginated Org #{i}", slug: "paginated-org-#{i}")
+    end
+
+    get admin_organizations_path
+    assert_response :success
+
+    # Should have pagination nav rendered
+    assert_select "nav[aria-label]"
+  end
+
   test "non-admin cannot discard an organization" do
     sign_in_as(users(:two))
     org = organizations(:one)

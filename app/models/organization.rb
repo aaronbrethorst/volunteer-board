@@ -3,6 +3,9 @@ class Organization < ApplicationRecord
 
   has_one_attached :logo
 
+  validate :logo_content_type_validation
+  validate :logo_size_validation
+
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
   has_many :listings, dependent: :destroy
@@ -23,5 +26,24 @@ class Organization < ApplicationRecord
 
   def generate_slug
     self.slug = name.parameterize if name.present? && slug.blank?
+  end
+
+  LOGO_CONTENT_TYPES = %w[image/png image/jpeg image/gif image/webp].freeze
+  LOGO_MAX_SIZE = 5.megabytes
+
+  def logo_content_type_validation
+    return unless logo.attached?
+
+    unless LOGO_CONTENT_TYPES.include?(logo.blob.content_type)
+      errors.add(:logo, "is not a valid file type (allowed: PNG, JPEG, GIF, WEBP)")
+    end
+  end
+
+  def logo_size_validation
+    return unless logo.attached?
+
+    if logo.blob.byte_size > LOGO_MAX_SIZE
+      errors.add(:logo, "is too large (max 5 MB)")
+    end
   end
 end

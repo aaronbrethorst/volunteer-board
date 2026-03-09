@@ -23,7 +23,7 @@ class Listing < ApplicationRecord
 
   enum :status, { open: 0, filled: 1, closed: 2 }
 
-  scope :open, -> { where(status: :open).kept }
+  scope :available, -> { where(status: :open).kept }
   scope :chronologically, -> { order(created_at: :asc) }
   scope :reverse_chronologically, -> { order(created_at: :desc) }
 

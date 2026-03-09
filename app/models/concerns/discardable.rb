@@ -7,11 +7,11 @@ module Discardable
   end
 
   def discard
-    update(discarded_at: Time.current)
+    update!(discarded_at: Time.current)
   end
 
   def undiscard
-    update(discarded_at: nil)
+    update!(discarded_at: nil)
   end
 
   def discarded?
