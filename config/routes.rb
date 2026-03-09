@@ -13,6 +13,12 @@ Rails.application.routes.draw do
   end
   get "dashboard", to: "dashboard#show"
 
+  namespace :admin do
+    root "dashboard#show"
+    resources :organizations, only: [ :index, :update ]
+    resources :listings, only: [ :index, :update ]
+  end
+
   # OmniAuth callbacks
   get "/auth/:provider/callback", to: "omniauth_callbacks#create"
   get "/auth/failure", to: "omniauth_callbacks#failure"

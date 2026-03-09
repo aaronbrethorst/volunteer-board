@@ -54,11 +54,12 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not allow mass assignment of site_admin via profile update" do
-    sign_in_as(@user)
-    assert_not @user.site_admin?
+    non_admin = users(:two)
+    sign_in_as(non_admin)
+    assert_not non_admin.site_admin?
     patch profile_path, params: { user: { name: "Hacker", site_admin: true } }
-    @user.reload
-    assert_not @user.site_admin?
+    non_admin.reload
+    assert_not non_admin.site_admin?
   end
 
   test "should not allow changing email_address via profile update" do

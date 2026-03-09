@@ -1,0 +1,29 @@
+<% content_for(:title, "Admin Dashboard") %>
+
+<div class="w-full">
+  <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-sm font-medium text-gray-500">Organizations</h2>
+      <p class="text-3xl font-bold mt-2"><%= @organizations_count %></p>
+      <p class="text-sm text-gray-400 mt-1"><%= @discarded_organizations_count %> discarded</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-sm font-medium text-gray-500">Listings</h2>
+      <p class="text-3xl font-bold mt-2"><%= @listings_count %></p>
+      <p class="text-sm text-gray-400 mt-1"><%= @discarded_listings_count %> discarded</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-sm font-medium text-gray-500">Users</h2>
+      <p class="text-3xl font-bold mt-2"><%= @users_count %></p>
+    </div>
+  </div>
+
+  <div class="flex gap-4">
+    <%= link_to "Manage Organizations", admin_organizations_path, class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+    <%= link_to "Manage Listings", admin_listings_path, class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+  </div>
+</div>

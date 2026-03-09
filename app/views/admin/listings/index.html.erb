@@ -1,0 +1,45 @@
+<% content_for(:title, "Admin: Listings") %>
+
+<div class="w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Listings</h1>
+    <%= link_to "Back to Dashboard", admin_root_path, class: "text-indigo-600 hover:text-indigo-800" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discipline</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @listings.each do |listing| %>
+          <tr class="<%= 'bg-red-50' if listing.discarded? %>">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= listing.title %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= listing.organization.name %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= listing.discipline.humanize %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <% if listing.discarded? %>
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Discarded</span>
+              <% else %>
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><%= listing.status.humanize %></span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <% if listing.discarded? %>
+                <%= button_to "Restore", admin_listing_path(listing), method: :patch, params: { discarded: "false" }, class: "text-green-600 hover:text-green-800 font-medium" %>
+              <% else %>
+                <%= button_to "Discard", admin_listing_path(listing), method: :patch, params: { discarded: "true" }, class: "text-red-600 hover:text-red-800 font-medium", data: { turbo_confirm: "Are you sure you want to discard this listing?" } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
