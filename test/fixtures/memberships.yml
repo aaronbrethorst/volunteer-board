@@ -1,0 +1,14 @@
+owner_one:
+  user: one
+  organization: one
+  role: 0
+
+member_two:
+  user: two
+  organization: one
+  role: 1
+
+owner_two:
+  user: two
+  organization: two
+  role: 0

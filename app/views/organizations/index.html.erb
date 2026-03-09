@@ -1,0 +1,37 @@
+<div class="w-full max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Organizations</h1>
+    <% if authenticated? %>
+      <%= link_to "New Organization", new_organization_path, class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
+    <% end %>
+  </div>
+
+  <div class="space-y-4">
+    <% @organizations.each do |organization| %>
+      <div class="bg-white shadow rounded-lg p-6">
+        <div class="flex items-center gap-4">
+          <% if organization.logo.attached? %>
+            <%= image_tag organization.logo, class: "w-12 h-12 rounded-lg object-cover", alt: "#{organization.name} logo" %>
+          <% else %>
+            <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
+              <span class="text-lg font-bold text-indigo-600"><%= organization.name.first.upcase %></span>
+            </div>
+          <% end %>
+
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">
+              <%= link_to organization.name, organization_path(organization.slug), class: "hover:text-indigo-600" %>
+            </h2>
+            <% if organization.description.present? %>
+              <p class="text-gray-600 text-sm mt-1"><%= truncate(organization.description, length: 150) %></p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @organizations.empty? %>
+      <p class="text-gray-500 text-center py-8">No organizations yet.</p>
+    <% end %>
+  </div>
+</div>

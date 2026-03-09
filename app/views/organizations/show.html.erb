@@ -1,0 +1,43 @@
+<div class="w-full max-w-4xl mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <div class="flex items-start gap-6 mb-6">
+      <% if @organization.logo.attached? %>
+        <%= image_tag @organization.logo, class: "w-24 h-24 rounded-lg object-cover", alt: "#{@organization.name} logo" %>
+      <% else %>
+        <div class="w-24 h-24 rounded-lg bg-indigo-100 flex items-center justify-center">
+          <span class="text-3xl font-bold text-indigo-600"><%= @organization.name.first.upcase %></span>
+        </div>
+      <% end %>
+
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-gray-900"><%= @organization.name %></h1>
+
+        <div class="flex flex-wrap gap-4 mt-3">
+          <% if @organization.website_url.present? %>
+            <a href="<%= @organization.website_url %>" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+              Website
+            </a>
+          <% end %>
+
+          <% if @organization.repo_url.present? %>
+            <a href="<%= @organization.repo_url %>" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+              Repository
+            </a>
+          <% end %>
+        </div>
+      </div>
+
+      <% if authenticated? && @organization.memberships.exists?(user: Current.user, role: :owner) %>
+        <div>
+          <%= link_to "Edit", edit_organization_path(@organization.slug), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @organization.description.present? %>
+      <div class="prose max-w-none mt-6">
+        <p class="text-gray-700 leading-relaxed"><%= @organization.description %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

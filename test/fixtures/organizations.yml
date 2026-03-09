@@ -1,0 +1,19 @@
+one:
+  name: Code for Good
+  slug: code-for-good
+  description: A nonprofit coding organization
+  website_url: https://codeforgood.org
+  repo_url: https://github.com/codeforgood
+
+two:
+  name: Open Source Helpers
+  slug: open-source-helpers
+  description: Helping open source projects
+  website_url: https://opensourcehelpers.org
+  repo_url: https://github.com/opensourcehelpers
+
+discarded_org:
+  name: Discarded Org
+  slug: discarded-org
+  description: This org has been discarded
+  discarded_at: 2026-01-01 00:00:00
