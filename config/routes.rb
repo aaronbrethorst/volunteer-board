@@ -5,6 +5,11 @@ Rails.application.routes.draw do
   resources :users, only: %i[show]
   resource :profile, only: %i[edit update]
   resources :organizations, param: :slug, except: :destroy
+
+  # OmniAuth callbacks
+  get "/auth/:provider/callback", to: "omniauth_callbacks#create"
+  get "/auth/failure", to: "omniauth_callbacks#failure"
+  delete "/auth/:provider", to: "omniauth_callbacks#destroy"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

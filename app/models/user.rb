@@ -9,4 +9,12 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, if: -> { password.present? || new_record? }
+
+  def github_linked?
+    github_uid.present?
+  end
+
+  def linkedin_linked?
+    linkedin_uid.present?
+  end
 end

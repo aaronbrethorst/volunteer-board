@@ -46,6 +46,12 @@ gem "tailwindcss-rails"
 # Lightweight pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
 
+# OmniAuth for OAuth authentication [https://github.com/omniauth/omniauth]
+gem "omniauth"
+gem "omniauth-github", "~> 2.0"
+gem "omniauth-linkedin-openid"
+gem "omniauth-rails_csrf_protection"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
