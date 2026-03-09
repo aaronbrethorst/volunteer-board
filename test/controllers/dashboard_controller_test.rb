@@ -17,18 +17,33 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "show displays listings user expressed interest in" do
+  test "show links to interested listings page" do
     sign_in_as(@user)
-    Interest.create!(user: @user, listing: @listing)
     get dashboard_path
     assert_response :success
-    assert_match @listing.title, response.body
+    assert_match profile_listings_path, response.body
   end
 
-  test "show does not display listings user has no interest in" do
+  test "show displays user's organizations" do
     sign_in_as(@user)
     get dashboard_path
     assert_response :success
-    assert_no_match @listing.title, response.body
+    assert_match organizations(:one).name, response.body
+  end
+
+  test "show does not display organizations user doesn't belong to" do
+    sign_in_as(@user)
+    get dashboard_path
+    assert_response :success
+    assert_no_match organizations(:two).name, response.body
+  end
+
+  test "show does not display discarded organizations" do
+    # Give user a membership in the discarded org
+    Membership.create!(user: @user, organization: organizations(:discarded_org), role: :member)
+    sign_in_as(@user)
+    get dashboard_path
+    assert_response :success
+    assert_no_match organizations(:discarded_org).name, response.body
   end
 end
