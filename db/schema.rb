@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_000541) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_003734) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -49,6 +49,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_000541) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
+    t.string "github_uid"
+    t.string "github_username"
+    t.string "linkedin_uid"
+    t.string "linkedin_username"
+    t.string "name", null: false
+    t.string "password_digest", null: false
+    t.string "portfolio_url"
+    t.boolean "site_admin", default: false
+    t.datetime "updated_at", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["github_uid"], name: "index_users_on_github_uid", unique: true, where: "github_uid IS NOT NULL"
+    t.index ["linkedin_uid"], name: "index_users_on_linkedin_uid", unique: true, where: "linkedin_uid IS NOT NULL"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "sessions", "users"
 end

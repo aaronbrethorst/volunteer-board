@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh issue:*)",
+      "Bash(ls:*)",
+      "Bash(bundle install:*)",
+      "Bash(bundle list:*)",
+      "Bash(bin/rails tailwindcss:install:*)",
+      "Bash(bin/rails action_text:install:*)",
+      "Bash(bin/rails db:prepare:*)",
+      "Bash(bin/rails test:*)",
+      "Bash(bundle show:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(ruby:*)",
+      "Bash(bin/rubocop:*)",
+      "Bash(bin/brakeman:*)",
+      "Bash(bin/rails runner:*)",
+      "Bash(bin/rails tailwindcss:build:*)",
+      "Bash(bin/rails generate:*)",
+      "Bash(bin/rails db:migrate:*)"
+    ]
+  }
+}
