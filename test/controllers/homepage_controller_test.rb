@@ -86,6 +86,12 @@ class HomepageControllerTest < ActionDispatch::IntegrationTest
     assert_match(/no listings/i, response.body)
   end
 
+  test "search is case-insensitive" do
+    get root_path, params: { query: "rails backend" }
+    assert_response :success
+    assert_match @open_listing.title, response.body
+  end
+
   test "search escapes SQL LIKE wildcard characters" do
     # Searching for a literal "%" should NOT match all listings.
     # Before the fix, "%#{"%"}%" becomes "%%%" which matches everything in LIKE.

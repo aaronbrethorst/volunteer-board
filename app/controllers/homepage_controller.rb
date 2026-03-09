@@ -12,7 +12,7 @@ class HomepageController < ApplicationController
       search_term = "%#{ActiveRecord::Base.sanitize_sql_like(params[:query])}%"
       listings = listings.joins(:organization)
                          .where(
-                           "listings.title LIKE :q OR listings.skills LIKE :q OR organizations.name LIKE :q",
+                           "listings.title ILIKE :q OR listings.skills ILIKE :q OR organizations.name ILIKE :q",
                            q: search_term
                          )
     end
