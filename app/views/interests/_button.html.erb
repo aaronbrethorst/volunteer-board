@@ -1,0 +1,11 @@
+<%= turbo_frame_tag "interest_listing_#{listing.id}" do %>
+  <% if Current.user %>
+    <% if interested %>
+      <%= button_to "Remove Interest", listing_interest_path(listing), method: :delete,
+            class: "bg-red-100 text-red-700 px-4 py-2 rounded-md hover:bg-red-200 transition text-sm font-medium" %>
+    <% else %>
+      <%= button_to "I'm Interested", listing_interest_path(listing), method: :post,
+            class: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition text-sm font-medium" %>
+    <% end %>
+  <% end %>
+<% end %>

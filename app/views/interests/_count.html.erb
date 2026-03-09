@@ -1,0 +1,8 @@
+<%= tag.div id: "interest_count_#{listing.id}" do %>
+  <% count = listing.interests.count %>
+  <% if count > 0 %>
+    <span class="text-sm text-gray-600">
+      <%= pluralize(count, "person") %> interested
+    </span>
+  <% end %>
+<% end %>

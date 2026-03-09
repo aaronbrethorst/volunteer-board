@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   resources :organizations, param: :slug, only: [] do
     resources :listings, only: %i[new create], module: :organizations
   end
-  resources :listings, only: %i[show edit update]
+  resources :listings, only: %i[show edit update] do
+    resource :interest, only: %i[create destroy]
+  end
+  get "dashboard", to: "dashboard#show"
 
   # OmniAuth callbacks
   get "/auth/:provider/callback", to: "omniauth_callbacks#create"

@@ -8,11 +8,12 @@
         </p>
       </div>
 
-      <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
-        <div>
+      <div class="flex items-center gap-3">
+        <%= render "interests/button", listing: @listing, interested: (authenticated? && Current.user.interested_listings.include?(@listing)) %>
+        <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
           <%= link_to "Edit", edit_listing_path(@listing), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -68,6 +69,14 @@
         <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
         <%= @listing.description %>
       </div>
+    <% end %>
+
+    <div class="mt-4">
+      <%= render "interests/count", listing: @listing %>
+    </div>
+
+    <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
+      <%= render "interests/interested_users", listing: @listing %>
     <% end %>
 
     <div class="border-t mt-8 pt-6">

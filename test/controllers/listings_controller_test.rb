@@ -155,4 +155,46 @@ class ListingsControllerTest < ActionDispatch::IntegrationTest
     @listing.reload
     assert_nil @listing.discarded_at
   end
+
+  # --- Interest button and count ---
+
+  test "show displays interest count" do
+    Interest.create!(user: @user_two, listing: @listing)
+    get listing_path(@listing)
+    assert_response :success
+    assert_match "1 person interested", response.body
+  end
+
+  test "show displays I'm Interested button for authenticated user" do
+    sign_in_as(@user_two)
+    get listing_path(@listing)
+    assert_response :success
+    assert_select "button", text: "I'm Interested"
+  end
+
+  test "show displays Remove Interest button when already interested" do
+    sign_in_as(@user_two)
+    Interest.create!(user: @user_two, listing: @listing)
+    get listing_path(@listing)
+    assert_response :success
+    assert_match "Remove Interest", response.body
+  end
+
+  test "show displays interested users for org members" do
+    sign_in_as(@user_one) # owner of org one
+    Interest.create!(user: @user_two, listing: @listing)
+    get listing_path(@listing)
+    assert_response :success
+    assert_match @user_two.name, response.body
+  end
+
+  test "show does not display interested users for non-members" do
+    non_member = User.create!(name: "Non Member", email_address: "nonmember@example.com", password: "password123")
+    sign_in_as(non_member)
+    Interest.create!(user: @user_two, listing: @listing)
+    get listing_path(@listing)
+    assert_response :success
+    # Should see interest count but not the list of interested users
+    assert_no_match "Interested Volunteers", response.body
+  end
 end
