@@ -46,6 +46,9 @@ gem "tailwindcss-rails"
 # Lightweight pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
 
+# Component-based view architecture [https://viewcomponent.org]
+gem "view_component"
+
 # OmniAuth for OAuth authentication [https://github.com/omniauth/omniauth]
 gem "omniauth"
 gem "omniauth-github", "~> 2.0"

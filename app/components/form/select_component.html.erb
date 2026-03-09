@@ -1,0 +1,4 @@
+<div>
+  <%= @form.label @attribute, @label, class: "form-label" %>
+  <%= @form.select @attribute, @choices, { include_blank: @prompt }, class: "form-control", **@options %>
+</div>
