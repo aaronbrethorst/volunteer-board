@@ -5,7 +5,7 @@ class OrganizationsController < ApplicationController
   before_action :require_owner, only: %i[edit update]
 
   def index
-    @pagy, @organizations = pagy(Organization.kept.with_attached_logo.order(created_at: :desc))
+    @pagy, @organizations = pagy(Organization.kept.with_attached_logo.order(:name))
   end
 
   def show
