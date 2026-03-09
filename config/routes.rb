@@ -10,16 +10,19 @@ Rails.application.routes.draw do
   resources :organizations, param: :slug, except: :destroy
   resources :organizations, param: :slug, only: [] do
     resources :listings, only: %i[new create], module: :organizations
+    resource :flag, only: %i[new create]
   end
   resources :listings, only: %i[index show edit update] do
     resource :interest, only: %i[new create destroy]
     resources :interests, only: %i[show], as: :interest_details
+    resource :flag, only: %i[new create]
   end
 
   namespace :admin do
     root "dashboard#show"
     resources :organizations, only: [ :index, :update ]
     resources :listings, only: [ :index, :update ]
+    resources :flags, only: [ :index, :update ]
     resources :users, only: :index
   end
 

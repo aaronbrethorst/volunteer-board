@@ -1,0 +1,33 @@
+<% content_for(:title, "Report #{@flaggable.respond_to?(:name) ? @flaggable.name : @flaggable.title}") %>
+
+<div class="w-full max-w-lg mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">Report Content</h1>
+    <p class="text-gray-600 mb-6">
+      You are reporting
+      <strong><%= @flaggable.respond_to?(:name) ? @flaggable.name : @flaggable.title %></strong>.
+    </p>
+
+    <%= form_with model: @flag, url: flag_form_url do |f| %>
+      <% if @flag.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+          <ul class="list-disc list-inside text-sm text-red-600">
+            <% @flag.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-6">
+        <%= f.label :reason, "Reason for reporting", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :reason, rows: 4, required: true, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm", placeholder: "Please describe why you are reporting this content..." %>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= f.submit "Submit Report", class: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition text-sm font-medium cursor-pointer" %>
+        <%= link_to "Cancel", :back, class: "text-sm text-gray-600 hover:text-gray-800" %>
+      </div>
+    <% end %>
+  </div>
+</div>

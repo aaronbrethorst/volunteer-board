@@ -5,5 +5,6 @@ class Admin::DashboardController < Admin::BaseController
     @users_count = User.count
     @discarded_organizations_count = Organization.discarded.count
     @discarded_listings_count = Listing.discarded.count
+    @unreviewed_flags_count = Flag.unreviewed.count
   end
 end

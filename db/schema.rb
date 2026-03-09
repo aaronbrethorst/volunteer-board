@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_180956) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_223026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_180956) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "flags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "flaggable_id", null: false
+    t.string "flaggable_type", null: false
+    t.text "reason", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["flaggable_type", "flaggable_id"], name: "index_flags_on_flaggable"
+    t.index ["user_id", "flaggable_type", "flaggable_id"], name: "index_flags_on_user_id_and_flaggable_type_and_flaggable_id", unique: true
+    t.index ["user_id"], name: "index_flags_on_user_id"
   end
 
   create_table "interests", force: :cascade do |t|
@@ -132,6 +145,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_180956) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "flags", "users"
   add_foreign_key "interests", "listings"
   add_foreign_key "interests", "users"
   add_foreign_key "listings", "organizations"

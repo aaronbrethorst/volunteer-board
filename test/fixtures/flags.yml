@@ -1,0 +1,13 @@
+org_flag:
+  user: two
+  flaggable_type: Organization
+  flaggable_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
+  reason: This organization appears to be spam
+  status: 0
+
+listing_flag:
+  user: two
+  flaggable_type: Listing
+  flaggable_id: <%= ActiveRecord::FixtureSet.identify(:open_listing) %>
+  reason: This listing has inappropriate content
+  status: 0

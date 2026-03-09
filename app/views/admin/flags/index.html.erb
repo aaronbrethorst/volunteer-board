@@ -1,0 +1,55 @@
+<% content_for(:title, "Admin: Flags") %>
+
+<div class="w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Flags</h1>
+  </div>
+
+  <% if @flags.empty? %>
+    <p class="text-gray-500">No unreviewed flags.</p>
+  <% else %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flagged Item</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reported By</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @flags.each do |flag| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <% if flag.flaggable.present? %>
+                  <% case flag.flaggable %>
+                  <% when Organization %>
+                    <%= link_to flag.flaggable.name, organization_path(flag.flaggable.slug), class: "text-indigo-600 hover:text-indigo-800" %>
+                  <% when Listing %>
+                    <%= link_to flag.flaggable.title, listing_path(flag.flaggable), class: "text-indigo-600 hover:text-indigo-800" %>
+                  <% end %>
+                <% else %>
+                  <span class="text-gray-400">Deleted</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= flag.flaggable_type %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= flag.user&.name || "Deleted user" %></td>
+              <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate"><%= flag.reason %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <%= button_to "Resolve", admin_flag_path(flag), method: :patch, class: "text-green-600 hover:text-green-800 font-medium" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.last > 1 %>
+      <div class="mt-8">
+        <%== @pagy.series_nav(id: "admin-flags-pagination", aria_label: "Admin flags pagination") %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -4,6 +4,7 @@ class Listing < ApplicationRecord
   belongs_to :organization
 
   has_many :interests, dependent: :destroy
+  has_many :flags, as: :flaggable, dependent: :destroy
   has_many :interested_users, through: :interests, source: :user
 
   has_rich_text :description

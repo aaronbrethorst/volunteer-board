@@ -10,6 +10,9 @@
 
       <div class="flex items-center gap-3">
         <%= render "interests/button", listing: @listing, interested: (authenticated? && Current.user.interested_listings.include?(@listing)) %>
+        <% if authenticated? %>
+          <%= link_to "Flag", new_listing_flag_path(@listing), class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
+        <% end %>
         <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
           <%= link_to "Edit", edit_listing_path(@listing), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
         <% end %>
