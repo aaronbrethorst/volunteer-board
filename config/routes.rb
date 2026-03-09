@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     root "dashboard#show"
     resources :organizations, only: [ :index, :update ]
     resources :listings, only: [ :index, :update ]
+    resources :users, only: :index
   end
 
   # OmniAuth callbacks

@@ -126,9 +126,15 @@
       </div>
     <% end %>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <%= yield %>
-    </main>
+    <% if content_for?(:main_content) %>
+      <main class="flex-1">
+        <%= yield(:main_content) %>
+      </main>
+    <% else %>
+      <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <%= yield %>
+      </main>
+    <% end %>
 
     <footer class="bg-slate-900 mt-auto">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

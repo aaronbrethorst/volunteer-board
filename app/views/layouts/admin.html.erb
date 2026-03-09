@@ -1,0 +1,20 @@
+<% content_for(:main_content) do %>
+  <div class="flex min-h-0 flex-1">
+    <aside class="w-56 shrink-0 bg-white shadow-sm border-r border-gray-200 min-h-[calc(100vh-4rem)]">
+      <nav class="p-4 space-y-1">
+        <%= link_to "Dashboard", admin_root_path,
+          class: "block px-3 py-2 text-sm font-medium rounded-md #{controller_path == 'admin/dashboard' ? 'bg-amber-50 text-amber-800' : 'text-gray-700 hover:text-amber-600 hover:bg-gray-100'}" %>
+        <%= link_to "Organizations", admin_organizations_path,
+          class: "block px-3 py-2 text-sm font-medium rounded-md #{controller_path == 'admin/organizations' ? 'bg-amber-50 text-amber-800' : 'text-gray-700 hover:text-amber-600 hover:bg-gray-100'}" %>
+        <%= link_to "Listings", admin_listings_path,
+          class: "block px-3 py-2 text-sm font-medium rounded-md #{controller_path == 'admin/listings' ? 'bg-amber-50 text-amber-800' : 'text-gray-700 hover:text-amber-600 hover:bg-gray-100'}" %>
+        <%= link_to "Users", admin_users_path,
+          class: "block px-3 py-2 text-sm font-medium rounded-md #{controller_path == 'admin/users' ? 'bg-amber-50 text-amber-800' : 'text-gray-700 hover:text-amber-600 hover:bg-gray-100'}" %>
+      </nav>
+    </aside>
+    <div class="flex-1 p-8">
+      <%= yield %>
+    </div>
+  </div>
+<% end %>
+<%= render template: "layouts/application" %>
