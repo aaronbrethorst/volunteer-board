@@ -6,6 +6,12 @@
     background-color: #0f172a;
   }
 
+  .press-start-2p {
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
+    font-style: normal;
+  }
+
   .hero-overlay {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.75) 50%, rgba(15, 23, 42, 0.85) 100%);
     pointer-events: none;

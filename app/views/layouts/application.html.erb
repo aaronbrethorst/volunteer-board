@@ -21,6 +21,10 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -33,7 +37,7 @@
           <%# Left side: logo and primary nav %>
           <div class="flex items-center">
             <%= link_to root_path, class: "flex items-center gap-2 shrink-0 group" do %>
-              <span class="text-xl font-extrabold text-slate-800 tracking-tight">OSS<span class="text-amber-600">Volunteers</span></span>
+              <span class="text-slate-800 press-start-2p">OSS<span class="text-amber-600">Volunteers</span></span>
             <% end %>
             <div class="hidden sm:flex sm:ml-8 sm:space-x-4">
               <%= link_to "Home", root_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
@@ -127,7 +131,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <span class="text-lg font-extrabold text-white tracking-tight">OSS<span class="text-amber-500">Volunteers</span></span>
+            <span class="text-white press-start-2p">OSS<span class="text-amber-500">Volunteers</span></span>
             <p class="text-slate-400 text-sm mt-1">Connecting talent with open source.</p>
           </div>
           <div class="text-sm text-slate-500">
