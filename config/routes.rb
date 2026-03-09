@@ -3,12 +3,14 @@ Rails.application.routes.draw do
   resource :registration, only: %i[new create]
   resources :passwords, param: :token
   resources :users, only: %i[show]
-  resource :profile, only: %i[edit update]
+  resource :profile, only: %i[edit update] do
+    resources :listings, only: :index, controller: "profile_listings"
+  end
   resources :organizations, param: :slug, except: :destroy
   resources :organizations, param: :slug, only: [] do
     resources :listings, only: %i[new create], module: :organizations
   end
-  resources :listings, only: %i[show edit update] do
+  resources :listings, only: %i[index show edit update] do
     resource :interest, only: %i[new create destroy]
     resources :interests, only: %i[show], as: :interest_details
   end
