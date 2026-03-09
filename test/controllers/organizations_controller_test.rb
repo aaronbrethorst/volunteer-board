@@ -68,7 +68,14 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
     get new_organization_path
     assert_response :success
-    assert_select "form"
+    assert_select "form" do
+      assert_select "input[name='organization[name]']"
+      assert_select "textarea[name='organization[description]']"
+      assert_select "input[name='organization[website_url]']"
+      assert_select "input[name='organization[repo_url]']"
+      assert_select "input[name='organization[logo]']"
+      assert_select "input[type=submit]"
+    end
   end
 
   test "create requires authentication" do

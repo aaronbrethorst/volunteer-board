@@ -10,33 +10,14 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.label :description, class: "form-label" %>
-    <%= form.text_area :description, rows: 5, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.label :website_url, "Website URL", class: "form-label" %>
-    <%= form.url_field :website_url, class: "form-control", placeholder: "https://yourorg.com" %>
-  </div>
-
-  <div>
-    <%= form.label :repo_url, "Repository URL", class: "form-label" %>
-    <%= form.url_field :repo_url, class: "form-control", placeholder: "https://github.com/yourorg" %>
-  </div>
-
-  <div>
-    <%= form.label :logo, class: "form-label" %>
-    <%= form.file_field :logo, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
-  </div>
+  <%= render ::Form::TextFieldComponent.new(form: form, attribute: :name) %>
+  <%= render ::Form::TextAreaComponent.new(form: form, attribute: :description, rows: 5) %>
+  <%= render ::Form::UrlFieldComponent.new(form: form, attribute: :website_url, label: "Website URL", placeholder: "https://yourorg.com") %>
+  <%= render ::Form::UrlFieldComponent.new(form: form, attribute: :repo_url, label: "Repository URL", placeholder: "https://github.com/yourorg") %>
+  <%= render ::Form::FileFieldComponent.new(form: form, attribute: :logo, accept: "image/*") %>
 
   <div class="flex items-center gap-4">
-    <%= form.submit class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition cursor-pointer" %>
+    <%= render ::Form::SubmitButtonComponent.new(form: form) %>
     <% if organization.persisted? %>
       <%= link_to "Cancel", organization_path(organization.slug), class: "text-gray-600 hover:text-gray-800" %>
     <% end %>

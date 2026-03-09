@@ -3,7 +3,7 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 AllCops:
   Exclude:
-    - "app/components/**/*.html.erb"
+    - "**/*.html.erb"
 
 # Overwrite or add rules to create your own house style
 #

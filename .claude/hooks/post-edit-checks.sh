@@ -7,8 +7,8 @@ set -euo pipefail
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
-# Only run checks on Ruby/ERB files
-if [[ -z "$FILE_PATH" ]] || [[ ! "$FILE_PATH" =~ \.(rb|erb)$ ]]; then
+# Only run checks on Ruby files (skip ERB — RuboCop can't parse it)
+if [[ -z "$FILE_PATH" ]] || [[ ! "$FILE_PATH" =~ \.rb$ ]]; then
   exit 0
 fi
 
