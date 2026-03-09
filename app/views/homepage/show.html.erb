@@ -1,0 +1,88 @@
+<div class="w-full">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Volunteer Opportunities</h1>
+    <p class="text-gray-600">Find open-source and volunteer projects that need your skills.</p>
+  </div>
+
+  <%# Search and filter form %>
+  <div class="mb-8">
+    <%= form_with url: root_path, method: :get, class: "flex flex-col sm:flex-row gap-4" do |f| %>
+      <div class="flex-1">
+        <%= f.text_field :query,
+            value: params[:query],
+            placeholder: "Search by title, skills, or organization...",
+            class: "w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.select :discipline,
+            options_for_select(
+              [["All Disciplines", ""]] + Listing.disciplines.keys.map { |d| [d.titleize, d] },
+              params[:discipline]
+            ),
+            {},
+            class: "w-full sm:w-auto rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.submit "Search",
+            class: "w-full sm:w-auto rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-500 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Listings grid %>
+  <% if @listings.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @listings.each do |listing| %>
+        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div class="mb-3">
+            <h2 class="text-lg font-semibold text-gray-900">
+              <%= link_to listing.title, listing_path(listing), class: "hover:text-blue-600" %>
+            </h2>
+            <p class="text-sm text-gray-500">
+              <%= link_to listing.organization.name, organization_path(listing.organization), class: "text-blue-600 hover:underline" %>
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+              <%= listing.discipline.titleize %>
+            </span>
+          </div>
+
+          <div class="space-y-1 text-sm text-gray-600 mb-3">
+            <% if listing.commitment.present? %>
+              <p><span class="font-medium">Commitment:</span> <%= listing.commitment %></p>
+            <% end %>
+            <% if listing.location.present? %>
+              <p><span class="font-medium">Location:</span> <%= listing.location %></p>
+            <% end %>
+          </div>
+
+          <% if listing.skills.present? %>
+            <div class="flex flex-wrap gap-1 mb-3">
+              <% listing.skills.split(",").map(&:strip).each do |skill| %>
+                <span class="inline-block rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700"><%= skill %></span>
+              <% end %>
+            </div>
+          <% end %>
+
+          <p class="text-xs text-gray-400">
+            Posted <%= time_ago_in_words(listing.created_at) %> ago
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Pagination %>
+    <% if @pagy.last > 1 %>
+      <div class="mt-8">
+        <%== @pagy.series_nav(id: "listings-pagination", aria_label: "Listings pagination") %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-gray-500 text-lg">No listings found.</p>
+      <p class="text-gray-400 text-sm mt-2">Try adjusting your search or filters.</p>
+    </div>
+  <% end %>
+</div>
