@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "VolunteerBoard" %></title>
+    <title><%= content_for(:title) || "OSSVolunteers — Open Source Volunteer Opportunities" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="VolunteerBoard">
+    <meta name="application-name" content="OSSVolunteers">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="Find volunteer and open-source opportunities for tech professionals of all disciplines.">
-    <meta name="author" content="VolunteerBoard">
+    <meta name="description" content="Connect with open-source projects that need your skills. Find volunteer opportunities in engineering, design, marketing, and more.">
+    <meta name="author" content="OSSVolunteers">
     <meta name="robots" content="index, follow">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -32,10 +32,12 @@
         <div class="flex justify-between h-16">
           <%# Left side: logo and primary nav %>
           <div class="flex items-center">
-            <%= link_to "VolunteerBoard", root_path, class: "text-xl font-bold text-indigo-600 shrink-0" %>
+            <%= link_to root_path, class: "flex items-center gap-2 shrink-0 group" do %>
+              <span class="text-xl font-extrabold text-slate-800 tracking-tight">OSS<span class="text-amber-600">Volunteers</span></span>
+            <% end %>
             <div class="hidden sm:flex sm:ml-8 sm:space-x-4">
-              <%= link_to "Home", root_path, class: "text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
-              <%= link_to "Organizations", organizations_path, class: "text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
+              <%= link_to "Home", root_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
+              <%= link_to "Organizations", organizations_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
             </div>
           </div>
 
@@ -43,11 +45,11 @@
           <div class="hidden sm:flex sm:items-center sm:space-x-2">
             <% if authenticated? %>
               <% if Current.user&.site_admin? %>
-                <%= link_to "Admin", admin_root_path, class: "text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
+                <%= link_to "Admin", admin_root_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
               <% end %>
-              <%= link_to "Dashboard", dashboard_path, class: "text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
+              <%= link_to "Dashboard", dashboard_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
               <div class="relative ml-2" data-controller="dropdown">
-                <button type="button" data-action="click->dropdown#toggle" class="flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md hover:bg-gray-100">
+                <button type="button" data-action="click->dropdown#toggle" class="flex items-center text-sm font-medium text-gray-700 hover:text-amber-600 px-3 py-2 rounded-md hover:bg-gray-100">
                   <%= Current.user.name %>
                   <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -57,8 +59,8 @@
                 </div>
               </div>
             <% else %>
-              <%= link_to "Sign In", new_session_path, class: "text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
-              <%= link_to "Sign Up", new_registration_path, class: "bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 text-sm font-medium rounded-md" %>
+              <%= link_to "Sign In", new_session_path, class: "text-gray-700 hover:text-amber-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100" %>
+              <%= link_to "Sign Up", new_registration_path, class: "bg-slate-800 text-white hover:bg-slate-700 px-4 py-2 text-sm font-medium rounded-md" %>
             <% end %>
           </div>
 
@@ -76,18 +78,18 @@
       <%# Mobile menu %>
       <div class="hidden sm:hidden" data-nav-target="menu">
         <div class="px-2 pt-2 pb-3 space-y-1">
-          <%= link_to "Home", root_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
-          <%= link_to "Organizations", organizations_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+          <%= link_to "Home", root_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+          <%= link_to "Organizations", organizations_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
           <% if authenticated? %>
             <% if Current.user&.site_admin? %>
-              <%= link_to "Admin", admin_root_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+              <%= link_to "Admin", admin_root_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
             <% end %>
-            <%= link_to "Dashboard", dashboard_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
-            <%= link_to "Edit Profile", edit_profile_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
-            <%= button_to "Sign Out", session_path, method: :delete, class: "block w-full text-left text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+            <%= link_to "Dashboard", dashboard_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+            <%= link_to "Edit Profile", edit_profile_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+            <%= button_to "Sign Out", session_path, method: :delete, class: "block w-full text-left text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
           <% else %>
-            <%= link_to "Sign In", new_session_path, class: "block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
-            <%= link_to "Sign Up", new_registration_path, class: "block text-indigo-600 hover:text-indigo-700 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+            <%= link_to "Sign In", new_session_path, class: "block text-gray-700 hover:text-amber-600 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
+            <%= link_to "Sign Up", new_registration_path, class: "block text-amber-600 hover:text-amber-700 px-3 py-2 text-base font-medium rounded-md hover:bg-gray-100" %>
           <% end %>
         </div>
       </div>
@@ -121,9 +123,15 @@
       <%= yield %>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 mt-auto">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <p class="text-center text-sm text-gray-500">&copy; <%= Date.current.year %> VolunteerBoard. All rights reserved.</p>
+    <footer class="bg-slate-900 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span class="text-lg font-extrabold text-white tracking-tight">OSS<span class="text-amber-500">Volunteers</span></span>
+            <p class="text-slate-400 text-sm mt-1">Connecting talent with open source.</p>
+          </div>
+          <p class="text-sm text-slate-500">&copy; <%= Date.current.year %> OSSVolunteers.com</p>
+        </div>
       </div>
     </footer>
   </body>

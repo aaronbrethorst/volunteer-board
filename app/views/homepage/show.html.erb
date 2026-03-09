@@ -1,17 +1,69 @@
-<div class="w-full">
+<%# Hero section — breaks out of the main container %>
+<% unless params[:query].present? || params[:discipline].present? %>
+  <section class="hero-section -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-12 px-4 sm:px-6 lg:px-8 pt-16 pb-20 relative overflow-hidden">
+    <div class="hero-grain absolute inset-0"></div>
+    <div class="relative max-w-4xl mx-auto text-center">
+      <p class="text-amber-300 font-mono text-sm tracking-widest uppercase mb-4">Open Source Software Volunteers</p>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight mb-6">
+        Your skills can<br class="hidden sm:block"> change the world
+      </h1>
+      <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+        OSSVolunteers connects talented professionals with open-source projects that need help.
+        Whether you code, design, write, or organize — there's a project waiting for you.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#opportunities" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-8 py-3 rounded-lg text-base transition shadow-lg shadow-amber-500/20">
+          Browse Opportunities
+        </a>
+        <%= link_to "List Your Project", new_organization_path, class: "border border-slate-500 hover:border-slate-300 text-slate-200 hover:text-white font-medium px-8 py-3 rounded-lg text-base transition" %>
+      </div>
+    </div>
+
+    <%# Floating stat badges %>
+    <div class="relative max-w-3xl mx-auto mt-14">
+      <div class="flex flex-wrap justify-center gap-6 sm:gap-10">
+        <div class="text-center">
+          <p class="text-3xl font-bold text-white"><%= Listing.available.count %></p>
+          <p class="text-slate-400 text-sm mt-1">Open Roles</p>
+        </div>
+        <div class="w-px bg-slate-700 hidden sm:block"></div>
+        <div class="text-center">
+          <p class="text-3xl font-bold text-white"><%= Organization.kept.count %></p>
+          <p class="text-slate-400 text-sm mt-1">Organizations</p>
+        </div>
+        <div class="w-px bg-slate-700 hidden sm:block"></div>
+        <div class="text-center">
+          <p class="text-3xl font-bold text-white"><%= Listing.disciplines.count %></p>
+          <p class="text-slate-400 text-sm mt-1">Disciplines</p>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%# Search and filter %>
+<div id="opportunities" class="w-full">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Volunteer Opportunities</h1>
-    <p class="text-gray-600">Find open-source and volunteer projects that need your skills.</p>
+    <% if params[:query].present? || params[:discipline].present? %>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Search Results</h1>
+    <% else %>
+      <h2 class="text-2xl font-bold text-gray-900 mb-1">Latest Opportunities</h2>
+      <p class="text-gray-500 text-sm">Find a project that matches your skills and interests.</p>
+    <% end %>
   </div>
 
-  <%# Search and filter form %>
   <div class="mb-8">
-    <%= form_with url: root_path, method: :get, class: "flex flex-col sm:flex-row gap-4" do |f| %>
-      <div class="flex-1">
+    <%= form_with url: root_path, method: :get, class: "flex flex-col sm:flex-row gap-3" do |f| %>
+      <div class="flex-1 relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
         <%= f.text_field :query,
             value: params[:query],
             placeholder: "Search by title, skills, or organization...",
-            class: "w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+            class: "w-full rounded-lg border border-gray-200 bg-white pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm" %>
       </div>
       <div>
         <%= f.select :discipline,
@@ -20,69 +72,80 @@
               params[:discipline]
             ),
             {},
-            class: "w-full sm:w-auto rounded-md border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+            class: "w-full sm:w-auto rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-sm" %>
       </div>
       <div>
         <%= f.submit "Search",
-            class: "w-full sm:w-auto rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-500 cursor-pointer" %>
+            class: "w-full sm:w-auto rounded-lg bg-slate-800 px-6 py-2.5 text-sm font-medium text-white hover:bg-slate-700 cursor-pointer transition shadow-sm" %>
       </div>
+      <% if params[:query].present? || params[:discipline].present? %>
+        <div>
+          <%= link_to "Clear", root_path, class: "inline-flex items-center justify-center w-full sm:w-auto rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition shadow-sm" %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
   <%# Listings grid %>
   <% if @listings.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       <% @listings.each do |listing| %>
-        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div class="mb-3">
-            <h2 class="text-lg font-semibold text-gray-900">
-              <%= link_to listing.title, listing_path(listing), class: "hover:text-blue-600" %>
-            </h2>
-            <p class="text-sm text-gray-500">
-              <%= link_to listing.organization.name, organization_path(listing.organization), class: "text-blue-600 hover:underline" %>
-            </p>
-          </div>
-
-          <div class="mb-3">
-            <span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+        <%= link_to listing_path(listing), class: "group block rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200" do %>
+          <div class="flex items-start justify-between mb-3">
+            <span class="inline-block rounded-md bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
               <%= listing.discipline.titleize %>
             </span>
+            <span class="text-xs text-gray-400"><%= time_ago_in_words(listing.created_at) %> ago</span>
           </div>
+
+          <h3 class="text-base font-semibold text-gray-900 group-hover:text-amber-700 transition-colors mb-1 line-clamp-2">
+            <%= listing.title %>
+          </h3>
+          <p class="text-sm text-gray-500 mb-3">
+            <%= listing.organization.name %>
+          </p>
 
           <div class="space-y-1 text-sm text-gray-600 mb-3">
             <% if listing.commitment.present? %>
-              <p><span class="font-medium">Commitment:</span> <%= listing.commitment %></p>
+              <p class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <%= listing.commitment %>
+              </p>
             <% end %>
             <% if listing.location.present? %>
-              <p><span class="font-medium">Location:</span> <%= listing.location %></p>
+              <p class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <%= listing.location %>
+              </p>
             <% end %>
           </div>
 
           <% if listing.skills.present? %>
-            <div class="flex flex-wrap gap-1 mb-3">
-              <% listing.skills.split(",").map(&:strip).each do |skill| %>
-                <span class="inline-block rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700"><%= skill %></span>
+            <div class="flex flex-wrap gap-1.5">
+              <% listing.skills.split(",").map(&:strip).first(4).each do |skill| %>
+                <span class="inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600"><%= skill %></span>
+              <% end %>
+              <% remaining = listing.skills.split(",").size - 4 %>
+              <% if remaining > 0 %>
+                <span class="inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-400">+<%= remaining %></span>
               <% end %>
             </div>
           <% end %>
-
-          <p class="text-xs text-gray-400">
-            Posted <%= time_ago_in_words(listing.created_at) %> ago
-          </p>
-        </div>
+        <% end %>
       <% end %>
     </div>
 
     <%# Pagination %>
     <% if @pagy.last > 1 %>
-      <div class="mt-8">
+      <div class="mt-10">
         <%== @pagy.series_nav(id: "listings-pagination", aria_label: "Listings pagination") %>
       </div>
     <% end %>
   <% else %>
-    <div class="text-center py-12">
-      <p class="text-gray-500 text-lg">No listings found.</p>
-      <p class="text-gray-400 text-sm mt-2">Try adjusting your search or filters.</p>
+    <div class="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl">
+      <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <p class="text-gray-500 text-lg mt-4">No listings found.</p>
+      <p class="text-gray-400 text-sm mt-1">Try adjusting your search or filters.</p>
     </div>
   <% end %>
 </div>
