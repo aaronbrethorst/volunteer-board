@@ -65,7 +65,7 @@ namespace :dev do
       { name: "Farm to Table Tech", desc: "Connecting small farms with local buyers through logistics and inventory software.", url: "https://farmtotabletech.org", repo: nil },
       { name: "Disaster Ready", desc: "Emergency preparedness tools and communication systems for vulnerable communities.", url: "https://disasterready.org", repo: "https://github.com/disasterready" },
       { name: "Library Libre", desc: "Open-source library management systems for small and community libraries.", url: "https://librarylibre.org", repo: "https://github.com/librarylibre" },
-      { name: "Justice Data Lab", desc: "Data analysis tools for criminal justice reform organizations.", url: "https://justicedatalab.org", repo: "https://github.com/justicedatalab" },
+      { name: "Justice Data Lab", desc: "Data analysis tools for criminal justice reform organizations.", url: "https://justicedatalab.org", repo: "https://github.com/justicedatalab" }
     ]
 
     listing_templates = {
@@ -77,50 +77,50 @@ namespace :dev do
         { title: "Backend API Developer", skills: "Node.js, Express, MongoDB", commitment: "5-10 hrs/week" },
         { title: "Full-Stack Web Developer", skills: "Ruby, Rails, Hotwire, Stimulus", commitment: "5-8 hrs/week" },
         { title: "Database Migration Specialist", skills: "PostgreSQL, MySQL, Data Migration", commitment: "3-5 hrs/week" },
-        { title: "Embedded Systems Developer", skills: "C, Python, Raspberry Pi", commitment: "5-8 hrs/week" },
+        { title: "Embedded Systems Developer", skills: "C, Python, Raspberry Pi", commitment: "5-8 hrs/week" }
       ],
       ux_design: [
         { title: "UX Researcher", skills: "User interviews, Surveys, Analysis", commitment: "3-5 hrs/week" },
         { title: "UI Designer", skills: "Figma, Design Systems, Accessibility", commitment: "5-8 hrs/week" },
         { title: "Interaction Designer", skills: "Prototyping, Figma, User Testing", commitment: "4-6 hrs/week" },
-        { title: "Visual Designer", skills: "Illustration, Branding, Figma", commitment: "3-5 hrs/week" },
+        { title: "Visual Designer", skills: "Illustration, Branding, Figma", commitment: "3-5 hrs/week" }
       ],
       product: [
         { title: "Product Manager", skills: "Roadmapping, User Stories, Analytics", commitment: "5-8 hrs/week" },
         { title: "Agile Scrum Master", skills: "Scrum, Jira, Facilitation", commitment: "3-5 hrs/week" },
-        { title: "Product Analyst", skills: "SQL, Analytics, A/B Testing", commitment: "4-6 hrs/week" },
+        { title: "Product Analyst", skills: "SQL, Analytics, A/B Testing", commitment: "4-6 hrs/week" }
       ],
       marketing: [
         { title: "Content Writer", skills: "Blog writing, SEO, Social media", commitment: "3-5 hrs/week" },
         { title: "Social Media Manager", skills: "Twitter, LinkedIn, Content Strategy", commitment: "2-4 hrs/week" },
         { title: "Email Marketing Specialist", skills: "Mailchimp, Copywriting, Analytics", commitment: "2-3 hrs/week" },
-        { title: "Growth Marketing Lead", skills: "SEO, SEM, Content Marketing", commitment: "5-8 hrs/week" },
+        { title: "Growth Marketing Lead", skills: "SEO, SEM, Content Marketing", commitment: "5-8 hrs/week" }
       ],
       biz_dev: [
         { title: "Partnership Coordinator", skills: "Outreach, Negotiation, CRM", commitment: "3-5 hrs/week" },
         { title: "Grant Writer", skills: "Grant Research, Proposal Writing", commitment: "5-10 hrs/week" },
-        { title: "Fundraising Strategist", skills: "Donor Relations, Campaign Planning", commitment: "4-6 hrs/week" },
+        { title: "Fundraising Strategist", skills: "Donor Relations, Campaign Planning", commitment: "4-6 hrs/week" }
       ],
       devops: [
         { title: "CI/CD Pipeline Engineer", skills: "GitHub Actions, Docker, Linux", commitment: "3-5 hrs/week" },
         { title: "Cloud Infrastructure Engineer", skills: "AWS, Terraform, Kubernetes", commitment: "5-8 hrs/week" },
-        { title: "Site Reliability Engineer", skills: "Monitoring, Alerting, Linux", commitment: "4-6 hrs/week" },
+        { title: "Site Reliability Engineer", skills: "Monitoring, Alerting, Linux", commitment: "4-6 hrs/week" }
       ],
       documentation: [
         { title: "Technical Writer", skills: "Markdown, API Docs, Tutorials", commitment: "3-5 hrs/week" },
         { title: "Documentation Lead", skills: "Information Architecture, Style Guides", commitment: "4-6 hrs/week" },
-        { title: "API Documentation Writer", skills: "OpenAPI, REST, Developer Experience", commitment: "3-5 hrs/week" },
+        { title: "API Documentation Writer", skills: "OpenAPI, REST, Developer Experience", commitment: "3-5 hrs/week" }
       ],
       community: [
         { title: "Community Manager", skills: "Discord, Events, Onboarding", commitment: "5-8 hrs/week" },
         { title: "Volunteer Coordinator", skills: "Scheduling, Communication, Outreach", commitment: "3-5 hrs/week" },
-        { title: "Mentorship Program Lead", skills: "Mentoring, Program Design", commitment: "4-6 hrs/week" },
+        { title: "Mentorship Program Lead", skills: "Mentoring, Program Design", commitment: "4-6 hrs/week" }
       ],
       other: [
         { title: "Accessibility Auditor", skills: "WCAG, Screen Readers, Testing", commitment: "3-5 hrs/week" },
         { title: "Data Entry Volunteer", skills: "Spreadsheets, Attention to Detail", commitment: "2-4 hrs/week" },
-        { title: "Translation Volunteer", skills: "Bilingual, Localization", commitment: "2-3 hrs/week" },
-      ],
+        { title: "Translation Volunteer", skills: "Bilingual, Localization", commitment: "2-3 hrs/week" }
+      ]
     }
 
     locations = [
@@ -137,7 +137,7 @@ namespace :dev do
       "<p>We need someone who can own a piece of our stack end-to-end. You'll have real autonomy and the chance to shape our technical direction.</p><p>We meet weekly on Zoom and use GitHub for everything. Flexible schedule — work whenever it suits you.</p>",
       "<p>Help us improve our user experience and make our tools more accessible. We believe technology should work for everyone, not just the tech-savvy.</p><p>You'll collaborate with designers and developers to test, iterate, and ship improvements.</p>",
       "<p>This role involves a mix of hands-on work and strategic thinking. You'll help us figure out what to build next and why it matters.</p><p>We're a friendly, low-ego group. Newcomers are always welcome.</p>",
-      "<p>We're tackling a big problem with a small team, and we need your help. Whether you can give 2 hours or 10, every contribution counts.</p><p>Our codebase is well-documented and our maintainers are responsive to questions. Great place to make your first open-source contribution.</p>",
+      "<p>We're tackling a big problem with a small team, and we need your help. Whether you can give 2 hours or 10, every contribution counts.</p><p>Our codebase is well-documented and our maintainers are responsive to questions. Great place to make your first open-source contribution.</p>"
     ]
 
     # --- Create Users ---
@@ -154,7 +154,7 @@ namespace :dev do
         email_address: email,
         password: "password123",
         bio: bios.sample,
-        portfolio_url: [nil, nil, "https://#{first.downcase}#{last.downcase.gsub("'", "")}.dev", "https://github.com/#{first.downcase}#{last.downcase.gsub("'", "")}"].sample,
+        portfolio_url: [ nil, nil, "https://#{first.downcase}#{last.downcase.gsub("'", "")}.dev", "https://github.com/#{first.downcase}#{last.downcase.gsub("'", "")}" ].sample,
         github_username: rand < 0.6 ? "#{first.downcase}#{last.downcase.gsub("'", "")}#{i}" : nil,
         linkedin_username: rand < 0.4 ? "#{first.downcase}-#{last.downcase.gsub("'", "")}-#{rand(1000)}" : nil
       )
@@ -205,7 +205,7 @@ namespace :dev do
       rand(3..8).times do
         discipline = listing_templates.keys.sample
         template = listing_templates[discipline].sample
-        status = [:open, :open, :open, :open, :filled, :closed].sample
+        status = [ :open, :open, :open, :open, :filled, :closed ].sample
 
         listing = org.listings.create!(
           title: template[:title],
