@@ -1,7 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git:*)",
       "Bash(grep:*)",
       "Bash(gh repo:*)",
       "Bash(gh issue:*)",
@@ -18,12 +17,9 @@
       "Bash(ruby:*)",
       "Bash(bin/rubocop:*)",
       "Bash(bin/brakeman:*)",
-      "Bash(bin/rails runner:*)",
       "Bash(bin/rails tailwindcss:build:*)",
-      "Bash(bin/rails generate:*)",
-      "Bash(bin/rails db:migrate:*)",
       "Bash(cat:*)",
-      "Bash(/tmp/pagy_check2.rb:*)"
+      "Bash(bin/rails db:schema:dump:*)"
     ]
   }
 }

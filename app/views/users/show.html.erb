@@ -33,8 +33,13 @@
 
           <% if @user.portfolio_url.present? %>
             <li>
-              <%= link_to @user.portfolio_url, @user.portfolio_url,
-                    class: "text-indigo-600 hover:text-indigo-800 underline" %>
+              <% safe_url = URI.parse(@user.portfolio_url) rescue nil %>
+              <% if safe_url&.scheme&.match?(/\Ahttps?\z/) %>
+                <%= link_to @user.portfolio_url, safe_url.to_s,
+                      class: "text-indigo-600 hover:text-indigo-800 underline" %>
+              <% else %>
+                <span class="text-gray-700"><%= @user.portfolio_url %></span>
+              <% end %>
             </li>
           <% end %>
         </ul>
