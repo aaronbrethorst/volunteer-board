@@ -1,0 +1,94 @@
+<div class="w-full max-w-4xl mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900"><%= @listing.title %></h1>
+        <p class="mt-2 text-lg text-gray-600">
+          <%= link_to @listing.organization.name, organization_path(@listing.organization.slug), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+        </p>
+      </div>
+
+      <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
+        <div>
+          <%= link_to "Edit", edit_listing_path(@listing), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-medium text-gray-500">Discipline:</span>
+        <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-0.5 text-sm font-medium text-indigo-800">
+          <%= @listing.discipline.titleize %>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-medium text-gray-500">Status:</span>
+        <span class="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium
+          <%= case @listing.status
+              when 'open' then 'bg-green-100 text-green-800'
+              when 'filled' then 'bg-yellow-100 text-yellow-800'
+              when 'closed' then 'bg-red-100 text-red-800'
+              end %>">
+          <%= @listing.status.titleize %>
+        </span>
+      </div>
+
+      <% if @listing.commitment.present? %>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium text-gray-500">Commitment:</span>
+          <span class="text-sm text-gray-700"><%= @listing.commitment %></span>
+        </div>
+      <% end %>
+
+      <% if @listing.location.present? %>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-medium text-gray-500">Location:</span>
+          <span class="text-sm text-gray-700"><%= @listing.location %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @listing.skills.present? %>
+      <div class="mb-6">
+        <h2 class="text-sm font-medium text-gray-500 mb-2">Skills</h2>
+        <div class="flex flex-wrap gap-2">
+          <% @listing.skills.split(",").map(&:strip).each do |skill| %>
+            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-700">
+              <%= skill %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @listing.description.present? %>
+      <div class="prose max-w-none mt-6 border-t pt-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
+        <%= @listing.description %>
+      </div>
+    <% end %>
+
+    <div class="border-t mt-8 pt-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-3">About the Organization</h2>
+      <div class="flex items-center gap-4">
+        <% if @listing.organization.logo.attached? %>
+          <%= image_tag @listing.organization.logo, class: "w-12 h-12 rounded-lg object-cover", alt: "#{@listing.organization.name} logo" %>
+        <% else %>
+          <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
+            <span class="text-lg font-bold text-indigo-600"><%= @listing.organization.name.first.upcase %></span>
+          </div>
+        <% end %>
+        <div>
+          <p class="font-medium text-gray-900">
+            <%= link_to @listing.organization.name, organization_path(@listing.organization.slug), class: "text-indigo-600 hover:text-indigo-800" %>
+          </p>
+          <% if @listing.organization.description.present? %>
+            <p class="text-sm text-gray-600 mt-1"><%= truncate(@listing.organization.description, length: 150) %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

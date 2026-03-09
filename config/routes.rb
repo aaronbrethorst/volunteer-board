@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :users, only: %i[show]
   resource :profile, only: %i[edit update]
   resources :organizations, param: :slug, except: :destroy
+  resources :organizations, param: :slug, only: [] do
+    resources :listings, only: %i[new create], module: :organizations
+  end
+  resources :listings, only: %i[show edit update]
 
   # OmniAuth callbacks
   get "/auth/:provider/callback", to: "omniauth_callbacks#create"

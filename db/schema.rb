@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_005058) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_012623) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -47,6 +47,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_005058) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "listings", force: :cascade do |t|
+    t.string "commitment"
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.integer "discipline", null: false
+    t.string "location", default: "Remote"
+    t.integer "organization_id", null: false
+    t.string "skills"
+    t.integer "status", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_listings_on_discarded_at"
+    t.index ["organization_id", "status"], name: "index_listings_on_organization_id_and_status"
+    t.index ["organization_id"], name: "index_listings_on_organization_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -102,6 +118,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_005058) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "listings", "organizations"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
   add_foreign_key "sessions", "users"

@@ -1,0 +1,7 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="bg-white shadow rounded-lg p-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">New Listing</h1>
+    <p class="text-gray-600 mb-6">Creating a listing for <strong><%= @organization.name %></strong></p>
+    <%= render "listings/form", listing: @listing, url: organization_listings_path(@organization.slug), method: :post %>
+  </div>
+</div>

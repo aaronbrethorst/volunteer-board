@@ -1,0 +1,36 @@
+open_listing:
+  title: Rails Backend Developer
+  discipline: 0
+  commitment: "~5 hrs/week"
+  location: Remote
+  skills: Ruby, Rails, PostgreSQL
+  status: 0
+  organization: one
+
+filled_listing:
+  title: UX Researcher
+  discipline: 1
+  commitment: One-time project
+  location: San Francisco
+  skills: User Research, Figma
+  status: 1
+  organization: one
+
+closed_listing:
+  title: Marketing Lead
+  discipline: 3
+  commitment: Flexible
+  location: Remote
+  skills: Social Media, Content Strategy
+  status: 2
+  organization: two
+
+discarded_listing:
+  title: Discarded Listing
+  discipline: 0
+  commitment: "~5 hrs/week"
+  location: Remote
+  skills: Ruby
+  status: 0
+  discarded_at: 2026-01-01 00:00:00
+  organization: one

@@ -1,0 +1,54 @@
+<%= form_with(model: listing, url: url, method: method, class: "space-y-6") do |form| %>
+  <% if listing.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <h2 class="text-red-800 font-semibold mb-2"><%= pluralize(listing.errors.count, "error") %> prevented this listing from being saved:</h2>
+      <ul class="list-disc list-inside text-red-700 text-sm">
+        <% listing.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :title, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+  </div>
+
+  <div>
+    <%= form.label :discipline, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.select :discipline, Listing.disciplines.keys.map { |d| [d.titleize, d] }, { include_blank: "Select a discipline" }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.rich_text_area :description, class: "w-full" %>
+  </div>
+
+  <div>
+    <%= form.label :commitment, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :commitment, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500", placeholder: "e.g. ~5 hrs/week, One-time project, Flexible" %>
+  </div>
+
+  <div>
+    <%= form.label :location, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :location, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500", placeholder: "Remote" %>
+  </div>
+
+  <div>
+    <%= form.label :skills, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :skills, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500", placeholder: "e.g. Ruby, Rails, React" %>
+  </div>
+
+  <div>
+    <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.select :status, Listing.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <%= form.submit class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition cursor-pointer" %>
+    <% if listing.persisted? %>
+      <%= link_to "Cancel", listing_path(listing), class: "text-gray-600 hover:text-gray-800" %>
+    <% end %>
+  </div>
+<% end %>
