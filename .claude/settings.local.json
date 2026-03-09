@@ -21,7 +21,9 @@
       "Bash(bin/rails runner:*)",
       "Bash(bin/rails tailwindcss:build:*)",
       "Bash(bin/rails generate:*)",
-      "Bash(bin/rails db:migrate:*)"
+      "Bash(bin/rails db:migrate:*)",
+      "Bash(cat:*)",
+      "Bash(/tmp/pagy_check2.rb:*)"
     ]
   }
 }

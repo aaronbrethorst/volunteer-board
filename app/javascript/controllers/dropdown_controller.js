@@ -1,0 +1,24 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["menu"]
+
+  connect() {
+    this.closeOnClickOutside = this.closeOnClickOutside.bind(this)
+    document.addEventListener("click", this.closeOnClickOutside)
+  }
+
+  disconnect() {
+    document.removeEventListener("click", this.closeOnClickOutside)
+  }
+
+  toggle() {
+    this.menuTarget.classList.toggle("hidden")
+  }
+
+  closeOnClickOutside(event) {
+    if (!this.element.contains(event.target)) {
+      this.menuTarget.classList.add("hidden")
+    }
+  }
+}
