@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2026_03_09_013939) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -122,8 +125,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_013939) do
     t.boolean "site_admin", default: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
-    t.index ["github_uid"], name: "index_users_on_github_uid", unique: true, where: "github_uid IS NOT NULL"
-    t.index ["linkedin_uid"], name: "index_users_on_linkedin_uid", unique: true, where: "linkedin_uid IS NOT NULL"
+    t.index ["github_uid"], name: "index_users_on_github_uid", unique: true, where: "(github_uid IS NOT NULL)"
+    t.index ["linkedin_uid"], name: "index_users_on_linkedin_uid", unique: true, where: "(linkedin_uid IS NOT NULL)"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
