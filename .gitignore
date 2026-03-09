@@ -38,3 +38,6 @@
 !/app/assets/builds/.keep
 
 settings.local.json
+
+# SimpleCov coverage reports
+/coverage
