@@ -8,9 +8,9 @@
 
     <%= form_with model: [@listing, Interest.new], url: listing_interest_path(@listing) do |f| %>
       <div class="mb-6">
-        <%= f.label :message, "Message (optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.label :message, "Message (optional)", class: "form-label" %>
         <%= f.text_area :message, rows: 5, placeholder: "Tell the organization why you're interested and what you can contribute...",
-              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+              class: "form-control" %>
       </div>
 
       <div class="flex items-center gap-4">

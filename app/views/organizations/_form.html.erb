@@ -11,27 +11,27 @@
   <% end %>
 
   <div>
-    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.text_field :name, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
   </div>
 
   <div>
-    <%= form.label :description, class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.text_area :description, rows: 5, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, rows: 5, class: "form-control" %>
   </div>
 
   <div>
-    <%= form.label :website_url, "Website URL", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.url_field :website_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500", placeholder: "https://yourorg.com" %>
+    <%= form.label :website_url, "Website URL", class: "form-label" %>
+    <%= form.url_field :website_url, class: "form-control", placeholder: "https://yourorg.com" %>
   </div>
 
   <div>
-    <%= form.label :repo_url, "Repository URL", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.url_field :repo_url, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500", placeholder: "https://github.com/yourorg" %>
+    <%= form.label :repo_url, "Repository URL", class: "form-label" %>
+    <%= form.url_field :repo_url, class: "form-control", placeholder: "https://github.com/yourorg" %>
   </div>
 
   <div>
-    <%= form.label :logo, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.label :logo, class: "form-label" %>
     <%= form.file_field :logo, accept: "image/*", class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
   </div>
 

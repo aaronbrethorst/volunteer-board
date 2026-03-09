@@ -14,23 +14,23 @@
     <% end %>
 
     <div class="my-5">
-      <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field :name, required: true, autofocus: true, autocomplete: "name", placeholder: "Enter your full name", class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      <%= form.label :name, class: "form-label" %>
+      <%= form.text_field :name, required: true, autofocus: true, autocomplete: "name", placeholder: "Enter your full name", class: "form-control" %>
     </div>
 
     <div class="my-5">
-      <%= form.label :email_address, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.email_field :email_address, required: true, autocomplete: "email", placeholder: "Enter your email address", class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      <%= form.label :email_address, class: "form-label" %>
+      <%= form.email_field :email_address, required: true, autocomplete: "email", placeholder: "Enter your email address", class: "form-control" %>
     </div>
 
     <div class="my-5">
-      <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Create a password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      <%= form.label :password, class: "form-label" %>
+      <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Create a password", maxlength: 72, class: "form-control" %>
     </div>
 
     <div class="my-5">
-      <%= form.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      <%= form.label :password_confirmation, class: "form-label" %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "form-control" %>
     </div>
 
     <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
