@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
   def show
-    @interested_listings = Current.user.interested_listings.kept.includes(:organization)
+    @organizations = Current.user.organizations.kept.with_attached_logo.order(:name)
   end
 end
