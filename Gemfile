@@ -81,4 +81,7 @@ group :test do
 
   # Code coverage [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", "~> 0.22.0", require: false
+
+  # Coverage analysis CLI and library [https://github.com/keithrbennett/cov-loupe]
+  gem "cov-loupe", require: false
 end

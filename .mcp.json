@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "cov-loupe": {
+      "type": "stdio",
+      "command": "cov-loupe",
+      "args": [
+        "-m",
+        "mcp"
+      ],
+      "env": {}
+    }
+  }
+}
