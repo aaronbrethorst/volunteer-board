@@ -19,13 +19,10 @@
         </div>
       <% end %>
 
-      <div class="mb-6">
-        <%= f.label :reason, "Reason for reporting", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_area :reason, rows: 4, required: true, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm", placeholder: "Please describe why you are reporting this content..." %>
-      </div>
+      <%= render Form::TextAreaComponent.new(form: f, attribute: :reason, label: "Reason for reporting", rows: 4, required: true, placeholder: "Please describe why you are reporting this content...", autofocus: true) %>
 
-      <div class="flex items-center gap-3">
-        <%= f.submit "Submit Report", class: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition text-sm font-medium cursor-pointer" %>
+      <div class="flex items-center gap-3 mt-6">
+        <%= render Form::SubmitButtonComponent.new(form: f, label: "Submit Report", variant: :danger) %>
         <%= link_to "Cancel", :back, class: "text-sm text-gray-600 hover:text-gray-800" %>
       </div>
     <% end %>
