@@ -62,8 +62,9 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create does not notify the owner about their own interest" do
-    sign_in_as(@user) # user one is the owner of org one
-    assert_enqueued_emails 0 do
+    sign_in_as(@user) # user one is an owner of org one
+    assert_enqueued_emails 1 do
+      # Only the other owner (users(:three)) should be notified, not the acting user
       post listing_interest_path(@listing), params: { interest: { message: "I'm the owner" } }
     end
   end
@@ -83,10 +84,37 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     InterestMailer.define_singleton_method(:new_interest, original)
   end
 
+  test "create sends notification to all organization owners" do
+    sign_in_as(@user_two)
+
+    assert_enqueued_emails 2 do
+      post listing_interest_path(@listing), params: { interest: { message: "Hi owners" } }
+    end
+  end
+
+  test "create still notifies remaining owners when one enqueue fails" do
+    sign_in_as(@user_two)
+    call_count = 0
+    original = InterestMailer.method(:new_interest)
+
+    InterestMailer.define_singleton_method(:new_interest) do |interest, recipient|
+      call_count += 1
+      raise ActiveJob::EnqueueError, "queue full" if call_count == 1
+      original.call(interest, recipient)
+    end
+
+    assert_enqueued_emails 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "partial fail" } }
+    end
+  ensure
+    InterestMailer.define_singleton_method(:new_interest, original)
+  end
+
   test "create does not send notification to non-owner members" do
     sign_in_as(@user_two)
 
-    assert_enqueued_emails 1 do
+    assert_enqueued_emails 2 do
+      # 2 emails: one per owner (users(:one) and users(:three)), none to the member
       post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
     end
   end

@@ -13,6 +13,12 @@ two:
   name: User Two
   email_confirmed_at: <%= 1.day.ago %>
 
+three:
+  email_address: user-three@example.com
+  password_digest: <%= password_digest %>
+  name: User Three
+  email_confirmed_at: <%= 1.day.ago %>
+
 unconfirmed:
   email_address: unconfirmed@example.com
   password_digest: <%= password_digest %>
