@@ -1,5 +1,5 @@
 class EmailConfirmationsController < ApplicationController
-  allow_unauthenticated_access only: :show
+  allow_unauthenticated_access only: [ :show ]
   rate_limit to: 5, within: 1.minute, only: :create,
     with: -> { redirect_to root_url, alert: "Try again later." }
 
