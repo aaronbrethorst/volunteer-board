@@ -17,11 +17,13 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_notice "reset instructions sent"
   end
 
-  test "create for unconfirmed user does not send reset email" do
+  test "create for unconfirmed user sends confirmation email instead of reset" do
     unconfirmed = users(:unconfirmed)
 
-    post passwords_path, params: { email_address: unconfirmed.email_address }
-    assert_enqueued_emails 0
+    assert_enqueued_email_with EmailConfirmationMailer, :confirm, args: [ unconfirmed ] do
+      post passwords_path, params: { email_address: unconfirmed.email_address }
+    end
+    assert_enqueued_emails 1
     assert_redirected_to new_session_path
 
     follow_redirect!
