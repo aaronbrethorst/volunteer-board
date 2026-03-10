@@ -40,6 +40,14 @@ class InterestMailerTest < ActionMailer::TestCase
     assert_match "review their interest", mail.html_part.body.decoded
   end
 
+  test "new_interest is multipart with both HTML and text parts" do
+    mail = InterestMailer.new_interest(@interest, @owner)
+
+    assert mail.multipart?, "Expected email to be multipart"
+    assert_not_nil mail.html_part, "Expected an HTML part"
+    assert_not_nil mail.text_part, "Expected a text part"
+  end
+
   test "new_interest body does not reveal the interested user's identity" do
     mail = InterestMailer.new_interest(@interest, @owner)
     body = mail.body.encoded
