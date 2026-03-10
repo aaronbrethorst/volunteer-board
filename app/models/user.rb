@@ -23,7 +23,7 @@ class User < ApplicationRecord
   end
 
   def confirm_email!
-    update!(email_confirmed_at: Time.current)
+    update_column(:email_confirmed_at, Time.current)
   end
 
   def github_linked?

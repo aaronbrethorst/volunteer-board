@@ -50,6 +50,14 @@ class UserEmailConfirmationTest < ActiveSupport::TestCase
     end
   end
 
+  test "confirm_email! succeeds even if model validations would fail" do
+    @user.update_column(:name, "")
+    assert_not @user.valid?
+
+    assert_nothing_raised { @user.confirm_email! }
+    assert @user.reload.email_confirmed?
+  end
+
   test "new users default to unconfirmed" do
     user = User.create!(
       email_address: "brand-new@example.com",
