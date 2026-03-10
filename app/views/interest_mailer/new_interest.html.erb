@@ -1,0 +1,11 @@
+<p>Hi <%= @recipient.name %>,</p>
+
+<p>
+  Someone has expressed interest in your listing
+  <strong><%= @listing.title %></strong>
+  at <%= @organization.name %>.
+</p>
+
+<p>
+  <%= link_to "View details", @interest_url %> to learn more about this volunteer.
+</p>

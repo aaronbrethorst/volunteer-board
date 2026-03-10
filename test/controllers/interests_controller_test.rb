@@ -52,6 +52,45 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to listing_path(@listing)
   end
 
+  test "create sends notification email to organization owners" do
+    sign_in_as(@user_two)
+    owner = memberships(:owner_one).user
+
+    assert_enqueued_email_with InterestMailer, :new_interest, args: ->(args) { args[1] == owner } do
+      post listing_interest_path(@listing), params: { interest: { message: "Interested!" } }
+    end
+  end
+
+  test "create does not notify the owner about their own interest" do
+    sign_in_as(@user) # user one is the owner of org one
+    assert_enqueued_emails 0 do
+      post listing_interest_path(@listing), params: { interest: { message: "I'm the owner" } }
+    end
+  end
+
+  test "create succeeds even when notification raises" do
+    sign_in_as(@user_two)
+
+    # Sabotage the mailer class method so it raises before deliver_later
+    original = InterestMailer.method(:new_interest)
+    InterestMailer.define_singleton_method(:new_interest) { |*, **| raise StandardError, "boom" }
+
+    assert_difference "Interest.count", 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "Still works" } }
+    end
+    assert_redirected_to listing_path(@listing)
+  ensure
+    InterestMailer.define_singleton_method(:new_interest, original)
+  end
+
+  test "create does not send notification to non-owner members" do
+    sign_in_as(@user_two)
+
+    assert_enqueued_emails 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
+    end
+  end
+
   test "create prevents duplicates" do
     sign_in_as(@user)
     Interest.create!(user: @user, listing: @listing)
@@ -59,6 +98,14 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
       post listing_interest_path(@listing), params: { interest: { message: "duplicate" } }
     end
     assert_redirected_to listing_path(@listing)
+  end
+
+  test "create does not send email for duplicate interest" do
+    sign_in_as(@user)
+    Interest.create!(user: @user, listing: @listing)
+    assert_enqueued_emails 0 do
+      post listing_interest_path(@listing), params: { interest: { message: "duplicate" } }
+    end
   end
 
   test "create returns 404 for discarded listing" do
