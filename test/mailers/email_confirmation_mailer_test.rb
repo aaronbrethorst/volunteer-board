@@ -20,6 +20,14 @@ class EmailConfirmationMailerTest < ActionMailer::TestCase
   test "confirm email body includes confirmation link" do
     mail = EmailConfirmationMailer.confirm(@user)
 
-    assert_match "email_confirmations", mail.body.encoded
+    assert_match %r{email_confirmations/[A-Za-z0-9\-_]+}, mail.body.encoded
+  end
+
+  test "confirm email mentions single-use and 24-hour expiry" do
+    mail = EmailConfirmationMailer.confirm(@user)
+    body = mail.body.encoded
+
+    assert_match(/expire.*24 hours/i, body)
+    assert_match(/only.*once/i, body)
   end
 end
