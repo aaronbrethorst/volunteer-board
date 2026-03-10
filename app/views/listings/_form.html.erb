@@ -10,43 +10,25 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, class: "form-label" %>
-    <%= form.text_field :title, class: "form-control" %>
-  </div>
+  <%= render Form::TextFieldComponent.new(form: form, attribute: :title) %>
 
-  <div>
-    <%= form.label :discipline, class: "form-label" %>
-    <%= form.select :discipline, Listing.disciplines.keys.map { |d| [d.titleize, d] }, { include_blank: "Select a discipline" }, class: "form-control" %>
-  </div>
+  <%= render Form::SelectComponent.new(form: form, attribute: :discipline, choices: Listing.disciplines.keys.map { |d| [d.titleize, d] }, prompt: "Select a discipline") %>
 
   <div>
     <%= form.label :description, class: "form-label" %>
     <%= form.rich_text_area :description, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :commitment, class: "form-label" %>
-    <%= form.text_field :commitment, class: "form-control", placeholder: "e.g. ~5 hrs/week, One-time project, Flexible" %>
-  </div>
+  <%= render Form::TextFieldComponent.new(form: form, attribute: :commitment, placeholder: "e.g. ~5 hrs/week, One-time project, Flexible") %>
 
-  <div>
-    <%= form.label :location, class: "form-label" %>
-    <%= form.text_field :location, class: "form-control", placeholder: "Remote" %>
-  </div>
+  <%= render Form::TextFieldComponent.new(form: form, attribute: :location, placeholder: "Remote") %>
 
-  <div>
-    <%= form.label :skills, class: "form-label" %>
-    <%= form.text_field :skills, class: "form-control", placeholder: "e.g. Ruby, Rails, React" %>
-  </div>
+  <%= render Form::TextFieldComponent.new(form: form, attribute: :skills, placeholder: "e.g. Ruby, Rails, React") %>
 
-  <div>
-    <%= form.label :status, class: "form-label" %>
-    <%= form.select :status, Listing.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "form-control" %>
-  </div>
+  <%= render Form::SelectComponent.new(form: form, attribute: :status, choices: Listing.statuses.keys.map { |s| [s.titleize, s] }) %>
 
   <div class="flex items-center gap-4">
-    <%= form.submit class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition cursor-pointer" %>
+    <%= render Form::SubmitButtonComponent.new(form: form) %>
     <% if listing.persisted? %>
       <%= link_to "Cancel", listing_path(listing), class: "text-gray-600 hover:text-gray-800" %>
     <% end %>
