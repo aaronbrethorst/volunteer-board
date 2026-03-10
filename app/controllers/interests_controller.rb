@@ -57,5 +57,7 @@ class InterestsController < ApplicationController
     rescue ActiveJob::EnqueueError => e
       Rails.logger.error("Failed to enqueue interest notification for user #{membership.user_id}: #{e.class} - #{e.message}")
     end
+  rescue StandardError => e
+    Rails.logger.error("Failed to notify organization owners for interest #{interest.id}: #{e.class} - #{e.message}")
   end
 end

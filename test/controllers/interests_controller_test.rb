@@ -68,6 +68,21 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "create succeeds even when notification raises" do
+    sign_in_as(@user_two)
+
+    # Sabotage the mailer class method so it raises before deliver_later
+    original = InterestMailer.method(:new_interest)
+    InterestMailer.define_singleton_method(:new_interest) { |*, **| raise StandardError, "boom" }
+
+    assert_difference "Interest.count", 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "Still works" } }
+    end
+    assert_redirected_to listing_path(@listing)
+  ensure
+    InterestMailer.define_singleton_method(:new_interest, original)
+  end
+
   test "create does not send notification to non-owner members" do
     sign_in_as(@user_two)
 
