@@ -31,7 +31,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
   test "registration succeeds even if confirmation email enqueue fails" do
     # Override the mailer class method to simulate queue failure
-    EmailConfirmationMailer.define_singleton_method(:confirm) { |_user| raise StandardError, "queue down" }
+    EmailConfirmationMailer.define_singleton_method(:confirm) { |_user| raise ActiveJob::EnqueueError, "queue down" }
 
     assert_difference("User.count", 1) do
       post registration_url, params: {
@@ -45,6 +45,8 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to root_url
+    follow_redirect!
+    assert_match(/couldn.*send.*confirmation/i, flash[:notice])
   ensure
     EmailConfirmationMailer.singleton_class.remove_method(:confirm)
   end
