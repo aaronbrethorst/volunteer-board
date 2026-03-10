@@ -43,6 +43,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# AWS S3 SDK for Active Storage (Cloudflare R2) [https://github.com/aws/aws-sdk-ruby]
+gem "aws-sdk-s3", require: false
+
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "tailwindcss-rails"
 
