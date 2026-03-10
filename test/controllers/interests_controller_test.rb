@@ -53,7 +53,7 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create sends notification email to organization owners" do
-    sign_in_as(@user)
+    sign_in_as(@user_two)
     owner = memberships(:owner_one).user
 
     assert_enqueued_email_with InterestMailer, :new_interest, args: ->(args) { args[1] == owner } do
@@ -62,12 +62,11 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create does not send notification to non-owner members" do
-    sign_in_as(@user)
-    post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
+    sign_in_as(@user_two)
 
-    enqueued_jobs = ActiveJob::Base.queue_adapter.enqueued_jobs.select { |j| j["job_class"] == "ActionMailer::MailDeliveryJob" }
-    mailer_jobs = enqueued_jobs.select { |j| j["arguments"]&.first == "InterestMailer" }
-    assert_equal 1, mailer_jobs.size, "Expected one email to the single owner, not to regular members"
+    assert_enqueued_emails 1 do
+      post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
+    end
   end
 
   test "create prevents duplicates" do
