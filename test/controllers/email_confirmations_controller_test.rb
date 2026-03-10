@@ -81,7 +81,9 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   test "create for already confirmed user shows already confirmed notice" do
     sign_in_as users(:two)
 
-    post email_confirmations_url
+    assert_enqueued_emails 0 do
+      post email_confirmations_url
+    end
 
     assert_redirected_to root_url
     assert_equal "Your email is already confirmed.", flash[:notice]
