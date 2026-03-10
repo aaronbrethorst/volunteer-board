@@ -1,57 +1,88 @@
-<div class="w-full max-w-4xl mx-auto">
-  <div class="bg-white shadow rounded-lg p-8">
-    <div class="flex items-start gap-6 mb-6">
+<div class="w-full max-w-5xl mx-auto">
+  <%# === Hero banner === %>
+  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-8 sm:p-10">
+    <%# Decorative background element %>
+    <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle at 20% 50%, rgb(251 191 36) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgb(251 191 36) 0%, transparent 40%);"></div>
+
+    <div class="relative flex flex-col sm:flex-row items-start gap-6">
+      <%# Logo %>
       <% if @organization.logo.attached? %>
-        <%= image_tag @organization.logo, class: "w-24 h-24 rounded-lg object-cover", alt: "#{@organization.name} logo" %>
+        <%= image_tag @organization.logo,
+          class: "w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover ring-2 ring-white/20 shadow-lg",
+          alt: "#{@organization.name} logo" %>
       <% else %>
-        <div class="w-24 h-24 rounded-lg bg-indigo-100 flex items-center justify-center">
-          <span class="text-3xl font-bold text-indigo-600"><%= @organization.name.first.upcase %></span>
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-amber-500/20 ring-2 ring-amber-400/30 flex items-center justify-center shadow-lg">
+          <span class="text-3xl sm:text-4xl font-bold text-amber-400"><%= @organization.name.first.upcase %></span>
         </div>
       <% end %>
 
-      <div class="flex-1">
-        <h1 class="text-3xl font-bold text-gray-900"><%= @organization.name %></h1>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight"><%= @organization.name %></h1>
 
-        <div class="flex flex-wrap gap-4 mt-3">
+        <% if @organization.description.present? %>
+          <p class="mt-2 text-slate-300 leading-relaxed max-w-2xl"><%= @organization.description %></p>
+        <% end %>
+
+        <%# Links row %>
+        <div class="flex flex-wrap items-center gap-2 mt-4">
           <% if @organization.website_url.present? %>
-            <a href="<%= @organization.website_url %>" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            <a href="<%= @organization.website_url %>" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 px-3.5 py-1.5 text-sm font-medium text-slate-200 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
               Website
             </a>
           <% end %>
 
           <% if @organization.repo_url.present? %>
-            <a href="<%= @organization.repo_url %>" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            <a href="<%= @organization.repo_url %>" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 px-3.5 py-1.5 text-sm font-medium text-slate-200 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               Repository
             </a>
           <% end %>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <%# Actions %>
+      <div class="flex items-center gap-2 sm:self-start">
         <% if authenticated? %>
-          <%= link_to "Flag", new_organization_flag_path(@organization.slug), class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
+          <%= link_to new_organization_flag_path(@organization.slug),
+              class: "inline-flex items-center gap-1 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/10 hover:border-red-400/30 px-3 py-1.5 text-sm text-slate-300 hover:text-red-300 transition-colors" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg>
+            Flag
+          <% end %>
         <% end %>
         <% if authenticated? && @organization.memberships.exists?(user: Current.user, role: :owner) %>
-          <%= link_to "Edit", edit_organization_path(@organization.slug), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
+          <%= link_to edit_organization_path(@organization.slug),
+              class: "inline-flex items-center gap-1.5 rounded-full bg-amber-500 hover:bg-amber-400 px-4 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/></svg>
+            Edit
+          <% end %>
         <% end %>
       </div>
     </div>
-
-    <% if @organization.description.present? %>
-      <div class="prose max-w-none mt-6">
-        <p class="text-gray-700 leading-relaxed"><%= @organization.description %></p>
-      </div>
-    <% end %>
   </div>
 
-  <% if @listings.any? %>
-    <div class="mt-8">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Open Listings</h2>
+  <%# === Listings section === %>
+  <div class="mt-10">
+    <% if @listings.any? %>
+      <div class="flex items-center gap-3 mb-5">
+        <h2 class="text-lg font-semibold text-gray-900">Open Listings</h2>
+        <span class="inline-flex items-center justify-center rounded-full bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5">
+          <%= @listings.size %>
+        </span>
+      </div>
+
       <div class="grid gap-4 sm:grid-cols-2">
         <% @listings.each do |listing| %>
           <%= render ListingCardComponent.new(listing: listing) %>
         <% end %>
       </div>
-    </div>
-  <% end %>
+    <% else %>
+      <div class="rounded-xl border-2 border-dashed border-gray-200 py-12 text-center">
+        <svg class="mx-auto h-10 w-10 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+        <p class="mt-3 text-sm text-gray-500">No open listings right now.</p>
+      </div>
+    <% end %>
+  </div>
 </div>
