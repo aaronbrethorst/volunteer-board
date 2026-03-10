@@ -61,6 +61,13 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "create does not notify the owner about their own interest" do
+    sign_in_as(@user) # user one is the owner of org one
+    assert_enqueued_emails 0 do
+      post listing_interest_path(@listing), params: { interest: { message: "I'm the owner" } }
+    end
+  end
+
   test "create does not send notification to non-owner members" do
     sign_in_as(@user_two)
 
