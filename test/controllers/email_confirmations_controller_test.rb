@@ -115,6 +115,14 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div.bg-yellow-50", false
   end
 
+  test "create has rate limiting configured" do
+    # Verify rate_limit callback is registered on the create action
+    callbacks = EmailConfirmationsController._process_action_callbacks.select { |cb|
+      cb.kind == :before && cb.filter.to_s.include?("rate_limiting")
+    }
+    assert_not_empty callbacks, "Expected rate limiting before_action on EmailConfirmationsController"
+  end
+
   test "create requires authentication" do
     post email_confirmations_url
 
