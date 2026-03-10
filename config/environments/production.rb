@@ -61,9 +61,10 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "ossvolunteers.com" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  config.action_mailer.smtp_settings = Rails.application.credentials.dig(:smtp)
-  config.action_mailer.smtp_settings[:port] = 587
-  config.action_mailer.smtp_settings[:authentication] = :plain
+  smtp = Rails.application.credentials.dig(:smtp, :production)
+  if smtp
+    config.action_mailer.smtp_settings = smtp.merge(port: 587, authentication: :plain)
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
