@@ -1,106 +1,129 @@
-<div class="w-full max-w-4xl mx-auto">
-  <div class="bg-white shadow rounded-lg p-8">
-    <div class="flex items-start justify-between mb-6">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900"><%= @listing.title %></h1>
-        <p class="mt-2 text-lg text-gray-600">
-          <%= link_to @listing.organization.name, organization_path(@listing.organization.slug), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
-        </p>
-      </div>
+<div class="w-full max-w-5xl mx-auto">
+  <%# === Hero banner === %>
+  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-8 sm:p-10">
+    <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle at 20% 50%, rgb(251 191 36) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgb(251 191 36) 0%, transparent 40%);"></div>
 
-      <div class="flex items-center gap-3">
-        <%= render "interests/button", listing: @listing, interested: (authenticated? && Current.user.interested_listings.include?(@listing)) %>
-        <% if authenticated? %>
-          <%= link_to "Flag", new_listing_flag_path(@listing), class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
-        <% end %>
-        <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
-          <%= link_to "Edit", edit_listing_path(@listing), class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm" %>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="flex items-center gap-2">
-        <span class="text-sm font-medium text-gray-500">Discipline:</span>
-        <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-0.5 text-sm font-medium text-indigo-800">
-          <%= @listing.discipline.titleize %>
-        </span>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <span class="text-sm font-medium text-gray-500">Status:</span>
-        <span class="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium
-          <%= case @listing.status
-              when 'open' then 'bg-green-100 text-green-800'
-              when 'filled' then 'bg-yellow-100 text-yellow-800'
-              when 'closed' then 'bg-red-100 text-red-800'
-              end %>">
-          <%= @listing.status.titleize %>
-        </span>
-      </div>
-
-      <% if @listing.commitment.present? %>
-        <div class="flex items-center gap-2">
-          <span class="text-sm font-medium text-gray-500">Commitment:</span>
-          <span class="text-sm text-gray-700"><%= @listing.commitment %></span>
+    <div class="relative">
+      <%# Top row: badges + actions %>
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center rounded-full bg-amber-500/20 border border-amber-400/30 px-3 py-1 text-sm font-semibold text-amber-300">
+            <%= @listing.discipline.titleize %>
+          </span>
+          <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold
+            <%= case @listing.status
+                when 'open' then 'bg-emerald-500/20 border border-emerald-400/30 text-emerald-300'
+                when 'filled' then 'bg-yellow-500/20 border border-yellow-400/30 text-yellow-300'
+                when 'closed' then 'bg-red-500/20 border border-red-400/30 text-red-300'
+                end %>">
+            <%= @listing.status.titleize %>
+          </span>
         </div>
-      <% end %>
 
-      <% if @listing.location.present? %>
-        <div class="flex items-center gap-2">
-          <span class="text-sm font-medium text-gray-500">Location:</span>
-          <span class="text-sm text-gray-700"><%= @listing.location %></span>
+        <div class="flex flex-col items-end gap-1.5">
+          <div class="flex items-center gap-2">
+            <%= render "interests/button", listing: @listing, interested: (authenticated? && Current.user&.interested_listings&.include?(@listing)) %>
+            <% if authenticated? %>
+              <%= link_to new_listing_flag_path(@listing),
+                  class: "inline-flex items-center gap-1 rounded-full bg-white/10 hover:bg-red-500/20 border border-white/10 hover:border-red-400/30 px-3 py-1.5 text-sm text-slate-300 hover:text-red-300 transition-colors" do %>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg>
+                Flag
+              <% end %>
+            <% end %>
+            <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
+              <%= link_to edit_listing_path(@listing),
+                  class: "inline-flex items-center gap-1.5 rounded-full bg-amber-500 hover:bg-amber-400 px-4 py-1.5 text-sm font-semibold text-slate-900 shadow-sm transition-colors" do %>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125"/></svg>
+                Edit
+              <% end %>
+            <% end %>
+          </div>
+          <% if @listing.interests.count > 0 %>
+            <span class="text-xs text-slate-400"><%= pluralize(@listing.interests.count, "person") %> interested</span>
+          <% end %>
         </div>
-      <% end %>
-    </div>
+      </div>
 
-    <% if @listing.skills.present? %>
-      <div class="mb-6">
-        <h2 class="text-sm font-medium text-gray-500 mb-2">Skills</h2>
-        <div class="flex flex-wrap gap-2">
+      <%# Title + org %>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight"><%= @listing.title %></h1>
+      <p class="mt-2">
+        <%= link_to organization_path(@listing.organization.slug),
+            class: "inline-flex items-center gap-2 text-slate-300 hover:text-amber-300 transition-colors" do %>
+          <% if @listing.organization.logo.attached? %>
+            <%= image_tag @listing.organization.logo, class: "w-5 h-5 rounded object-cover ring-1 ring-white/20", alt: "" %>
+          <% end %>
+          <span class="font-medium"><%= @listing.organization.name %></span>
+        <% end %>
+      </p>
+
+      <%# Metadata pills %>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-5 text-sm text-slate-300">
+        <% if @listing.commitment.present? %>
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            <%= @listing.commitment %>
+          </span>
+        <% end %>
+        <% if @listing.location.present? %>
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
+            <%= @listing.location %>
+          </span>
+        <% end %>
+      </div>
+
+      <%# Skills %>
+      <% if @listing.skills.present? %>
+        <div class="flex flex-wrap gap-1.5 mt-4">
           <% @listing.skills.split(",").map(&:strip).each do |skill| %>
-            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-700">
+            <span class="inline-flex items-center rounded-full bg-white/10 border border-white/10 px-2.5 py-0.5 text-xs font-medium text-slate-300">
               <%= skill %>
             </span>
           <% end %>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
+  </div>
 
+  <%# === Body content === %>
+  <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
+    <%# Description %>
     <% if @listing.description.present? %>
-      <div class="prose max-w-none mt-6 border-t pt-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
+      <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
+      <div class="prose max-w-none text-gray-700">
         <%= @listing.description %>
       </div>
     <% end %>
 
-    <div class="mt-4">
-      <%= render "interests/count", listing: @listing %>
-    </div>
-
+    <%# Interested users (org members only) %>
     <% if authenticated? && @listing.organization.memberships.exists?(user: Current.user) %>
       <%= render "interests/interested_users", listing: @listing, interests: @interests %>
     <% end %>
 
-    <div class="border-t mt-8 pt-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-3">About the Organization</h2>
-      <div class="flex items-center gap-4">
+    <%# About the org %>
+    <div class="mt-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">About the Organization</h2>
+      <%= link_to organization_path(@listing.organization.slug),
+          class: "group flex items-center gap-4" do %>
         <% if @listing.organization.logo.attached? %>
-          <%= image_tag @listing.organization.logo, class: "w-12 h-12 rounded-lg object-cover", alt: "#{@listing.organization.name} logo" %>
+          <%= image_tag @listing.organization.logo,
+              class: "w-14 h-14 rounded-xl object-cover ring-1 ring-gray-200 group-hover:ring-amber-300 transition-all shadow-sm",
+              alt: "#{@listing.organization.name} logo" %>
         <% else %>
-          <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
-            <span class="text-lg font-bold text-indigo-600"><%= @listing.organization.name.first.upcase %></span>
+          <div class="w-14 h-14 rounded-xl bg-amber-50 ring-1 ring-amber-200 group-hover:ring-amber-300 flex items-center justify-center transition-all shadow-sm">
+            <span class="text-xl font-bold text-amber-600"><%= @listing.organization.name.first.upcase %></span>
           </div>
         <% end %>
         <div>
-          <p class="font-medium text-gray-900">
-            <%= link_to @listing.organization.name, organization_path(@listing.organization.slug), class: "text-indigo-600 hover:text-indigo-800" %>
+          <p class="font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">
+            <%= @listing.organization.name %>
           </p>
           <% if @listing.organization.description.present? %>
-            <p class="text-sm text-gray-600 mt-1"><%= truncate(@listing.organization.description, length: 150) %></p>
+            <p class="text-sm text-gray-500 mt-0.5 line-clamp-2"><%= truncate(@listing.organization.description, length: 150) %></p>
           <% end %>
         </div>
-      </div>
+        <svg class="w-5 h-5 text-gray-300 group-hover:text-amber-500 ml-auto shrink-0 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+      <% end %>
     </div>
   </div>
 </div>
