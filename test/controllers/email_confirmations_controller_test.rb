@@ -45,6 +45,17 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Email confirmation link is invalid or has expired.", flash[:alert]
   end
 
+  test "show with already-used token shows friendly message when user is logged in and confirmed" do
+    token = @user.generate_token_for(:email_confirmation)
+    @user.confirm_email!
+    sign_in_as @user
+
+    get email_confirmation_url(token)
+
+    assert_redirected_to root_url
+    assert_equal "Your email address is already confirmed.", flash[:notice]
+  end
+
   test "show does not require authentication" do
     token = @user.generate_token_for(:email_confirmation)
 

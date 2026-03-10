@@ -10,7 +10,12 @@ class EmailConfirmationsController < ApplicationController
       user.confirm_email!
       redirect_to root_url, notice: "Your email address has been confirmed."
     else
-      redirect_to root_url, alert: "Email confirmation link is invalid or has expired."
+      resume_session
+      if Current.user&.email_confirmed?
+        redirect_to root_url, notice: "Your email address is already confirmed."
+      else
+        redirect_to root_url, alert: "Email confirmation link is invalid or has expired."
+      end
     end
   end
 
