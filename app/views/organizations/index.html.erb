@@ -8,7 +8,7 @@
 
   <div class="space-y-4">
     <% @organizations.each do |organization| %>
-      <div class="bg-white shadow rounded-lg p-6">
+      <%= link_to organization_path(organization.slug), class: "group block bg-white shadow rounded-lg p-6 hover:shadow-md hover:border-gray-300 transition-all duration-200" do %>
         <div class="flex items-center gap-4">
           <% if organization.logo.attached? %>
             <%= image_tag organization.logo, class: "w-12 h-12 rounded-lg object-cover", alt: "#{organization.name} logo" %>
@@ -19,15 +19,15 @@
           <% end %>
 
           <div>
-            <h2 class="text-xl font-semibold text-gray-900">
-              <%= link_to organization.name, organization_path(organization.slug), class: "hover:text-indigo-600" %>
+            <h2 class="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+              <%= organization.name %>
             </h2>
             <% if organization.description.present? %>
               <p class="text-gray-600 text-sm mt-1"><%= truncate(organization.description, length: 150) %></p>
             <% end %>
           </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
 
     <% if @organizations.empty? %>
