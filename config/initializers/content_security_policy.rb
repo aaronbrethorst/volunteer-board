@@ -15,7 +15,7 @@ Rails.application.configure do
     policy.connect_src :self
     policy.frame_src   :none
     policy.base_uri    :self
-    policy.form_action :self
+    policy.form_action :self, "https://github.com/login/oauth/authorize", "https://www.linkedin.com/oauth/"
   end
 
   # Generate session nonces for permitted importmap and inline scripts.

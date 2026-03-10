@@ -40,47 +40,8 @@
     <h2 class="text-xl font-bold text-gray-900 mb-4">Linked Accounts</h2>
 
     <div class="space-y-4">
-      <%# GitHub %>
-      <div class="flex items-center justify-between py-3 border-b border-gray-200">
-        <div>
-          <p class="font-medium text-gray-900">GitHub</p>
-          <% if @user.github_linked? %>
-            <p class="text-sm text-gray-500">Linked as <strong><%= @user.github_username %></strong></p>
-          <% else %>
-            <p class="text-sm text-gray-500">Not linked</p>
-          <% end %>
-        </div>
-        <div>
-          <% if @user.github_linked? %>
-            <%= button_to "Unlink", "/auth/github", method: :delete,
-                  class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
-          <% else %>
-            <%= button_to "Link GitHub", "/auth/github", method: :post,
-                  class: "bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm hover:bg-gray-900 transition cursor-pointer" %>
-          <% end %>
-        </div>
-      </div>
-
-      <%# LinkedIn %>
-      <div class="flex items-center justify-between py-3">
-        <div>
-          <p class="font-medium text-gray-900">LinkedIn</p>
-          <% if @user.linkedin_linked? %>
-            <p class="text-sm text-gray-500">Linked as <strong><%= @user.linkedin_username %></strong></p>
-          <% else %>
-            <p class="text-sm text-gray-500">Not linked</p>
-          <% end %>
-        </div>
-        <div>
-          <% if @user.linkedin_linked? %>
-            <%= button_to "Unlink", "/auth/linkedin", method: :delete,
-                  class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
-          <% else %>
-            <%= button_to "Link LinkedIn", "/auth/linkedin", method: :post,
-                  class: "bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm hover:bg-blue-800 transition cursor-pointer" %>
-          <% end %>
-        </div>
-      </div>
+      <%= render 'profiles/github_button', user: @user %>
+      <%#= render 'profiles/linkedin_button', user: @user %>
     </div>
   </div>
 </div>

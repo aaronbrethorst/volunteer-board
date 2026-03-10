@@ -1,0 +1,20 @@
+<div class="flex items-center justify-between py-3">
+  <div>
+    <p class="font-medium text-gray-900">LinkedIn</p>
+    <% if user.linkedin_linked? %>
+      <p class="text-sm text-gray-500">Linked as <strong><%= user.linkedin_username %></strong></p>
+    <% else %>
+      <p class="text-sm text-gray-500">Not linked</p>
+    <% end %>
+  </div>
+  <div>
+    <% if user.linkedin_linked? %>
+      <%= button_to "Unlink", "/auth/linkedin", method: :delete,
+                    class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
+    <% else %>
+      <%= button_to "Link LinkedIn", "/auth/linkedin", method: :post,
+                    data: { turbo: false },
+                    class: "bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm hover:bg-blue-800 transition cursor-pointer" %>
+    <% end %>
+  </div>
+</div>
