@@ -2,13 +2,12 @@ require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:two)
+    @user = users(:unconfirmed)
   end
 
   # --- show (confirm via token) ---
 
   test "show with valid token confirms email" do
-    @user.update_column(:email_confirmed_at, nil)
     token = @user.generate_token_for(:email_confirmation)
 
     get email_confirmation_url(token)
@@ -26,7 +25,6 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show with expired token redirects with alert" do
-    @user.update_column(:email_confirmed_at, nil)
     token = @user.generate_token_for(:email_confirmation)
 
     travel 25.hours do
@@ -38,7 +36,6 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show with already-used token redirects with alert" do
-    @user.update_column(:email_confirmed_at, nil)
     token = @user.generate_token_for(:email_confirmation)
     @user.confirm_email!
 
@@ -49,7 +46,6 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show does not require authentication" do
-    @user.update_column(:email_confirmed_at, nil)
     token = @user.generate_token_for(:email_confirmation)
 
     get email_confirmation_url(token)
@@ -62,7 +58,6 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
 
   test "create resends confirmation email for authenticated unconfirmed user" do
     sign_in_as @user
-    @user.update_column(:email_confirmed_at, nil)
 
     assert_enqueued_email_with EmailConfirmationMailer, :confirm, args: [ @user ] do
       post email_confirmations_url
@@ -73,7 +68,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create for already confirmed user shows already confirmed notice" do
-    sign_in_as @user
+    sign_in_as users(:two)
 
     post email_confirmations_url
 

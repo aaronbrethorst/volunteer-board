@@ -18,9 +18,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create for unconfirmed user does not send reset email" do
-    @user.update_column(:email_confirmed_at, nil)
+    unconfirmed = users(:unconfirmed)
 
-    post passwords_path, params: { email_address: @user.email_address }
+    post passwords_path, params: { email_address: unconfirmed.email_address }
     assert_enqueued_emails 0
     assert_redirected_to new_session_path
 
