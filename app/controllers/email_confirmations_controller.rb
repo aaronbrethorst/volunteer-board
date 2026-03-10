@@ -24,7 +24,12 @@ class EmailConfirmationsController < ApplicationController
       return redirect_to root_url, notice: "Your email is already confirmed."
     end
 
-    EmailConfirmationMailer.confirm(Current.user).deliver_later
-    redirect_to root_url, notice: "Confirmation email has been resent."
+    begin
+      EmailConfirmationMailer.confirm(Current.user).deliver_later
+      redirect_to root_url, notice: "Confirmation email has been resent."
+    rescue ActiveJob::EnqueueError => e
+      Rails.logger.error("Failed to enqueue confirmation email for user #{Current.user.id}: #{e.class} - #{e.message}")
+      redirect_to root_url, alert: "We couldn't send the confirmation email right now. Please try again later."
+    end
   end
 end

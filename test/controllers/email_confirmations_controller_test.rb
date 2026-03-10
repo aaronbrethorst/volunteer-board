@@ -115,6 +115,19 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div.bg-yellow-50", false
   end
 
+  test "create handles email enqueue failure gracefully" do
+    sign_in_as @user
+
+    EmailConfirmationMailer.define_singleton_method(:confirm) { |_user| raise ActiveJob::EnqueueError, "queue down" }
+
+    post email_confirmations_url
+
+    assert_redirected_to root_url
+    assert_match(/couldn.*send.*confirmation/i, flash[:alert])
+  ensure
+    EmailConfirmationMailer.singleton_class.remove_method(:confirm)
+  end
+
   test "create has rate limiting configured" do
     # Verify rate_limit callback is registered on the create action
     callbacks = EmailConfirmationsController._process_action_callbacks.select { |cb|
