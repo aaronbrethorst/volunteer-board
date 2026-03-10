@@ -11,7 +11,11 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       start_new_session_for @user
-      EmailConfirmationMailer.confirm(@user).deliver_later
+      begin
+        EmailConfirmationMailer.confirm(@user).deliver_later
+      rescue => e
+        Rails.logger.error("Failed to enqueue confirmation email for user #{@user.id}: #{e.message}")
+      end
       redirect_to root_url, notice: "Welcome to OSSVolunteers! Check your email for a confirmation link."
     else
       render :new, status: :unprocessable_entity
