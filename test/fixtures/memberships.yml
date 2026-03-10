@@ -8,6 +8,11 @@ member_two:
   organization: one
   role: 1
 
+owner_three:
+  user: three
+  organization: one
+  role: 0
+
 owner_two:
   user: two
   organization: two
