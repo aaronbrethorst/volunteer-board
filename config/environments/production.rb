@@ -81,6 +81,7 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
+    "volunteer-board.onrender.com",
     "ossvolunteers.com",
     /.*\.ossvolunteers\.com/ # Allow requests from subdomains
   ]

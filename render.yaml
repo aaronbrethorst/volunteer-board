@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: volunteer-board
+    runtime: docker
+    plan: standard
+    region: oregon
+    healthCheckPath: /up
+    preDeployCommand: "bin/rails db:prepare"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: volunteer-board-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: RAILS_LOG_LEVEL
+        value: info
+
+  - type: worker
+    name: volunteer-board-worker
+    runtime: docker
+    plan: starter
+    region: oregon
+    dockerCommand: "bundle exec rake solid_queue:start"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: volunteer-board-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+
+databases:
+  - name: volunteer-board-db
+    plan: Basic-256mb
+    region: oregon
+    databaseName: volunteer_board_production
