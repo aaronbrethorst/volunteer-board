@@ -76,6 +76,34 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Your email is already confirmed.", flash[:notice]
   end
 
+  # --- confirmation banner ---
+
+  test "unconfirmed user sees confirmation banner" do
+    sign_in_as @user
+
+    get root_url
+
+    assert_response :success
+    assert_select "div.bg-yellow-50", /confirm your email/i
+    assert_select "div.bg-yellow-50 button", /resend confirmation/i
+  end
+
+  test "confirmed user does not see confirmation banner" do
+    sign_in_as users(:two)
+
+    get root_url
+
+    assert_response :success
+    assert_select "div.bg-yellow-50", false
+  end
+
+  test "unauthenticated visitor does not see confirmation banner" do
+    get root_url
+
+    assert_response :success
+    assert_select "div.bg-yellow-50", false
+  end
+
   test "create requires authentication" do
     post email_confirmations_url
 
