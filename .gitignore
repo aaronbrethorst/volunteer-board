@@ -44,3 +44,4 @@ settings.local.json
 
 # cov-loupe log
 cov_loupe.log
+.playwright-mcp
