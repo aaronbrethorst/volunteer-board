@@ -5,8 +5,15 @@ one:
   password_digest: <%= password_digest %>
   name: User One
   site_admin: true
+  email_confirmed_at: <%= 1.day.ago %>
 
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
   name: User Two
+  email_confirmed_at: <%= 1.day.ago %>
+
+unconfirmed:
+  email_address: unconfirmed@example.com
+  password_digest: <%= password_digest %>
+  name: Unconfirmed User

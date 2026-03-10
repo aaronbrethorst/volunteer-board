@@ -1,0 +1,5 @@
+You can confirm your email address by visiting this link:
+
+<%= email_confirmation_url(@user.generate_token_for(:email_confirmation)) %>
+
+This link will expire in 24 hours and can only be used once.

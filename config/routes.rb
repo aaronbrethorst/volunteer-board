@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resource :registration, only: %i[new create]
   resources :passwords, param: :token
+  resources :email_confirmations, only: %i[show create], param: :token
   resources :users, only: %i[show]
   resource :profile, only: %i[edit update] do
     resources :listings, only: :index, controller: "profile_listings"

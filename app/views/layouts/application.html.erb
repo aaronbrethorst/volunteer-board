@@ -102,6 +102,13 @@
       </div>
     </nav>
 
+    <% if authenticated? && Current.user && !Current.user.email_confirmed? %>
+      <div class="bg-yellow-50 border-b border-yellow-200 px-4 py-3 text-center text-sm text-yellow-800">
+        Please confirm your email address.
+        <%= button_to "Resend confirmation email", email_confirmations_path, method: :post, class: "underline font-medium" %>
+      </div>
+    <% end %>
+
     <%# Flash messages %>
     <% if flash.any? %>
       <div class="w-full space-y-2">
