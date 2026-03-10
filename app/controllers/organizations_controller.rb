@@ -9,6 +9,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
+    @listings = @organization.listings.available.order(created_at: :desc)
   end
 
   def new

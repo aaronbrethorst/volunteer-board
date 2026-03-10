@@ -43,4 +43,15 @@
       </div>
     <% end %>
   </div>
+
+  <% if @listings.any? %>
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Open Listings</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <% @listings.each do |listing| %>
+          <%= render ListingCardComponent.new(listing: listing) %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>
