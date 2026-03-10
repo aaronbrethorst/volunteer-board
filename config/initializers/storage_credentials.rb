@@ -1,4 +1,4 @@
-if Rails.application.config.active_storage.service == :r2
+if Rails.application.config.active_storage.service == :r2 && !ENV["SECRET_KEY_BASE_DUMMY"]
   required_keys = %i[access_key_id secret_access_key bucket endpoint_url]
   env = Rails.env.to_sym
   s3_config = Rails.application.credentials.dig(:s3, env)
