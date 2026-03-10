@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
 
+  # Fingerprint: token is invalidated when email_confirmed_at changes,
+  # ensuring single-use confirmation links.
   generates_token_for :email_confirmation, expires_in: 24.hours do
     email_confirmed_at
   end
