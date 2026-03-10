@@ -49,4 +49,14 @@ class UserEmailConfirmationTest < ActiveSupport::TestCase
       assert_nil found
     end
   end
+
+  test "new users default to unconfirmed" do
+    user = User.create!(
+      email_address: "brand-new@example.com",
+      password: "securepassword",
+      name: "Brand New"
+    )
+    assert_nil user.email_confirmed_at
+    assert_not user.email_confirmed?
+  end
 end
