@@ -24,7 +24,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "New User", user.name
     assert_redirected_to root_url
     follow_redirect!
-    assert_equal "Welcome to VolunteerBoard!", flash[:notice]
+    assert_equal "Welcome to OSSVolunteers! Check your email for a confirmation link.", flash[:notice]
   end
 
   test "should not create user with duplicate email" do
