@@ -6,6 +6,6 @@ class InterestMailer < ApplicationMailer
     @recipient = recipient
     @interest_url = listing_interest_detail_url(@listing, interest)
 
-    mail subject: "New interest in #{@listing.title}", to: recipient.email_address
+    mail subject: "New interest in #{@listing.title} (#{@organization.name})", to: recipient.email_address
   end
 end

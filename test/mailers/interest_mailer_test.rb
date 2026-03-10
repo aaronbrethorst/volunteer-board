@@ -14,10 +14,10 @@ class InterestMailerTest < ActionMailer::TestCase
     assert_equal [ @owner.email_address ], mail.to
   end
 
-  test "new_interest has correct subject with listing title" do
+  test "new_interest has correct subject with listing title and org name" do
     mail = InterestMailer.new_interest(@interest, @owner)
 
-    assert_equal "New interest in #{@listing.title}", mail.subject
+    assert_equal "New interest in #{@listing.title} (#{@listing.organization.name})", mail.subject
   end
 
   test "new_interest body includes listing title and organization name" do
