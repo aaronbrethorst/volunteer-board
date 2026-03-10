@@ -21,6 +21,7 @@ class InterestsController < ApplicationController
     @interest = @listing.interests.build(interest_params)
     @interest.user = Current.user
     @interest.save!
+    notify_organization_owners(@interest)
     redirect_to listing_path(@listing)
   rescue ActiveRecord::RecordNotUnique
     redirect_to listing_path(@listing)
@@ -48,5 +49,13 @@ class InterestsController < ApplicationController
 
   def interest_params
     params.expect(interest: [ :message ])
+  end
+
+  def notify_organization_owners(interest)
+    interest.listing.organization.memberships.where(role: :owner).includes(:user).find_each do |membership|
+      InterestMailer.new_interest(interest, membership.user).deliver_later
+    rescue ActiveJob::EnqueueError => e
+      Rails.logger.error("Failed to enqueue interest notification for user #{membership.user_id}: #{e.class} - #{e.message}")
+    end
   end
 end

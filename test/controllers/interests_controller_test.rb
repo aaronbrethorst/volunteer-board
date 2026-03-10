@@ -52,6 +52,24 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to listing_path(@listing)
   end
 
+  test "create sends notification email to organization owners" do
+    sign_in_as(@user)
+    owner = memberships(:owner_one).user
+
+    assert_enqueued_email_with InterestMailer, :new_interest, args: ->(args) { args[1] == owner } do
+      post listing_interest_path(@listing), params: { interest: { message: "Interested!" } }
+    end
+  end
+
+  test "create does not send notification to non-owner members" do
+    sign_in_as(@user)
+    post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
+
+    enqueued_jobs = ActiveJob::Base.queue_adapter.enqueued_jobs.select { |j| j["job_class"] == "ActionMailer::MailDeliveryJob" }
+    mailer_jobs = enqueued_jobs.select { |j| j["arguments"]&.first == "InterestMailer" }
+    assert_equal 1, mailer_jobs.size, "Expected one email to the single owner, not to regular members"
+  end
+
   test "create prevents duplicates" do
     sign_in_as(@user)
     Interest.create!(user: @user, listing: @listing)
@@ -59,6 +77,14 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
       post listing_interest_path(@listing), params: { interest: { message: "duplicate" } }
     end
     assert_redirected_to listing_path(@listing)
+  end
+
+  test "create does not send email for duplicate interest" do
+    sign_in_as(@user)
+    Interest.create!(user: @user, listing: @listing)
+    assert_enqueued_emails 0 do
+      post listing_interest_path(@listing), params: { interest: { message: "duplicate" } }
+    end
   end
 
   test "create returns 404 for discarded listing" do
