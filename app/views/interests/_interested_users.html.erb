@@ -7,11 +7,11 @@
           <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
             <span class="text-sm font-bold text-indigo-600"><%= interest.user.name.first.upcase %></span>
           </div>
-          <%= link_to interest.user.name, user_path(interest.user), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+          <%= link_to interest.user.name, user_path(interest.user), class: "link font-medium" %>
           <span class="text-xs text-gray-500">
             expressed interest <%= time_ago_in_words(interest.created_at) %> ago
           </span>
-          <%= link_to "View details", listing_interest_detail_path(listing, interest), class: "text-xs text-indigo-500 hover:text-indigo-700 ml-2" %>
+          <%= link_to "View details", listing_interest_detail_path(listing, interest), class: "link text-xs ml-2" %>
         </li>
       <% end %>
     </ul>

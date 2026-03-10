@@ -26,9 +26,9 @@
                 <% if flag.flaggable.present? %>
                   <% case flag.flaggable %>
                   <% when Organization %>
-                    <%= link_to flag.flaggable.name, organization_path(flag.flaggable.slug), class: "text-indigo-600 hover:text-indigo-800" %>
+                    <%= link_to flag.flaggable.name, organization_path(flag.flaggable.slug), class: "link" %>
                   <% when Listing %>
-                    <%= link_to flag.flaggable.title, listing_path(flag.flaggable), class: "text-indigo-600 hover:text-indigo-800" %>
+                    <%= link_to flag.flaggable.title, listing_path(flag.flaggable), class: "link" %>
                   <% end %>
                 <% else %>
                   <span class="text-gray-400">Deleted</span>

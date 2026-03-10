@@ -7,7 +7,7 @@
         <span class="text-sm font-bold text-indigo-600"><%= @interest.user.name.first.upcase %></span>
       </div>
       <div>
-        <%= link_to @interest.user.name, user_path(@interest.user), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+        <%= link_to @interest.user.name, user_path(@interest.user), class: "link font-medium" %>
         <p class="text-xs text-gray-500">
           Expressed interest <%= time_ago_in_words(@interest.created_at) %> ago
         </p>
@@ -25,7 +25,7 @@
 
     <div class="mt-6">
       <%= link_to "&larr; Back to listing".html_safe, listing_path(@listing),
-            class: "text-indigo-600 hover:text-indigo-800 text-sm font-medium" %>
+            class: "link text-sm font-medium" %>
     </div>
   </div>
 </div>

@@ -16,7 +16,7 @@
           <% if @user.github_username.present? %>
             <li>
               <%= link_to "https://github.com/#{@user.github_username}",
-                    class: "text-indigo-600 hover:text-indigo-800 underline" do %>
+                    class: "link underline" do %>
                 GitHub: <%= @user.github_username %>
               <% end %>
             </li>
@@ -25,7 +25,7 @@
           <% if @user.linkedin_username.present? %>
             <li>
               <%= link_to "https://linkedin.com/in/#{@user.linkedin_username}",
-                    class: "text-indigo-600 hover:text-indigo-800 underline" do %>
+                    class: "link underline" do %>
                 LinkedIn: <%= @user.linkedin_username %>
               <% end %>
             </li>
@@ -36,7 +36,7 @@
               <% safe_url = URI.parse(@user.portfolio_url) rescue nil %>
               <% if safe_url&.scheme&.match?(/\Ahttps?\z/) %>
                 <%= link_to @user.portfolio_url, safe_url.to_s,
-                      class: "text-indigo-600 hover:text-indigo-800 underline" %>
+                      class: "link underline" %>
               <% else %>
                 <span class="text-gray-700"><%= @user.portfolio_url %></span>
               <% end %>
@@ -49,7 +49,7 @@
     <% if authenticated? && Current.user == @user %>
       <div class="mt-6">
         <%= link_to "Edit Profile", edit_profile_path,
-              class: "inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition" %>
+              class: "inline-block bg-slate-800 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition" %>
       </div>
     <% end %>
   </div>

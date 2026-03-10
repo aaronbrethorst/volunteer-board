@@ -6,6 +6,10 @@
     background-color: #0f172a;
   }
 
+  .link {
+    @apply text-gray-900 hover:text-amber-700 transition-colors;
+  }
+
   .press-start-2p {
     font-family: "Press Start 2P", system-ui;
     font-weight: 400;
