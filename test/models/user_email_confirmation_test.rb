@@ -1,0 +1,64 @@
+require "test_helper"
+
+class UserEmailConfirmationTest < ActiveSupport::TestCase
+  test "email_confirmed? returns false when email_confirmed_at is nil" do
+    user = User.new(email_confirmed_at: nil)
+    assert_not user.email_confirmed?
+  end
+
+  test "email_confirmed? returns true when email_confirmed_at is set" do
+    user = User.new(email_confirmed_at: 1.day.ago)
+    assert user.email_confirmed?
+  end
+
+  test "confirm_email! sets email_confirmed_at" do
+    user = users(:one)
+    user.update_column(:email_confirmed_at, nil)
+
+    assert_not user.email_confirmed?
+    user.confirm_email!
+    assert user.email_confirmed?
+    assert_in_delta Time.current, user.email_confirmed_at, 2.seconds
+  end
+
+  test "generates email confirmation token" do
+    user = users(:one)
+    user.update_column(:email_confirmed_at, nil)
+
+    token = user.generate_token_for(:email_confirmation)
+    assert_not_nil token
+    assert_kind_of String, token
+  end
+
+  test "finds user by valid email confirmation token" do
+    user = users(:one)
+    user.update_column(:email_confirmed_at, nil)
+
+    token = user.generate_token_for(:email_confirmation)
+    found = User.find_by_token_for(:email_confirmation, token)
+    assert_equal user, found
+  end
+
+  test "email confirmation token is invalidated after confirmation" do
+    user = users(:one)
+    user.update_column(:email_confirmed_at, nil)
+
+    token = user.generate_token_for(:email_confirmation)
+    user.confirm_email!
+
+    found = User.find_by_token_for(:email_confirmation, token)
+    assert_nil found
+  end
+
+  test "email confirmation token expires after 24 hours" do
+    user = users(:one)
+    user.update_column(:email_confirmed_at, nil)
+
+    token = user.generate_token_for(:email_confirmation)
+
+    travel 25.hours do
+      found = User.find_by_token_for(:email_confirmation, token)
+      assert_nil found
+    end
+  end
+end

@@ -11,6 +11,7 @@ class RegistrationsController < ApplicationController
 
     if @user.save
       start_new_session_for @user
+      EmailConfirmationMailer.confirm(@user).deliver_later
       redirect_to root_url, notice: "Welcome to OSSVolunteers! Check your email for a confirmation link."
     else
       render :new, status: :unprocessable_entity
