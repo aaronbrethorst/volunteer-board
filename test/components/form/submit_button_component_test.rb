@@ -4,7 +4,7 @@ class Form::SubmitButtonComponentTest < ViewComponent::TestCase
   test "renders primary variant by default" do
     render_inline(Form::SubmitButtonComponent.new(form: form_for(Organization.new)))
 
-    assert_selector "input[type=submit][class*='bg-indigo-600']"
+    assert_selector "input[type=submit][class*='bg-slate-700']"
   end
 
   test "renders success variant" do
