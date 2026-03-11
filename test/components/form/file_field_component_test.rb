@@ -5,7 +5,7 @@ class Form::FileFieldComponentTest < ViewComponent::TestCase
     render_inline(Form::FileFieldComponent.new(form: form_for(Organization.new), attribute: :logo))
 
     assert_selector "div input[type=file][name='organization[logo]']"
-    assert_selector "input[class*='file:bg-indigo-50']"
+    assert_selector "input[class*='file:bg-slate-800']"
   end
 
   test "renders label" do
