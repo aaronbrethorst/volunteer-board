@@ -18,7 +18,7 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <% @organizations.each do |org| %>
           <tr class="<%= 'bg-red-50' if org.discarded? %>">
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= org.name %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><%= link_to org.name, organization_path(org.slug), class: "link" %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= org.slug %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm">
               <% if org.discarded? %>

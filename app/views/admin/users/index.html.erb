@@ -18,7 +18,7 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <% @users.each do |user| %>
           <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= user.name %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><%= link_to user.name, user_path(user), class: "link" %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= user.email_address %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm">
               <% if user.site_admin? %>

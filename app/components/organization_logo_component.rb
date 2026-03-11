@@ -32,7 +32,7 @@ class OrganizationLogoComponent < ViewComponent::Base
   end
 
   def fallback_classes
-    "#{@size[:container]} flex items-center justify-center #{@variant[:fallback_bg]} #{@extra_classes}".squish
+    "#{@size[:container]} inline-flex items-center justify-center #{@variant[:fallback_bg]} #{@extra_classes}".squish
   end
 
   def initial_classes
