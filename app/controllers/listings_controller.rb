@@ -24,7 +24,6 @@ class ListingsController < ApplicationController
   end
 
   def show
-    @interests = @listing.interests.includes(:user)
   end
 
   def edit

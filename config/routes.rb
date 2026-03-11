@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   end
   resources :listings, only: %i[index show edit update] do
     resource :interest, only: %i[new create destroy]
-    resources :interests, only: %i[show], as: :interest_details
+    resources :interests, only: %i[index show], as: :interest_details
     resource :flag, only: %i[new create]
   end
 

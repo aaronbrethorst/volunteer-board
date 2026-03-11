@@ -3,6 +3,13 @@ class InterestsController < ApplicationController
 
   before_action :set_listing
 
+  def index
+    require_owner
+    return if performed?
+
+    @interests = @listing.interests.includes(:user).order(created_at: :desc)
+  end
+
   def new
     if !authenticated?
       session[:return_to_after_authenticating] = request.url
@@ -45,6 +52,12 @@ class InterestsController < ApplicationController
 
   def set_listing
     @listing = Listing.kept.find(params[:listing_id])
+  end
+
+  def require_owner
+    unless Current.user && @listing.organization.memberships.exists?(user: Current.user, role: :owner)
+      redirect_to listing_path(@listing), alert: "You are not authorized to perform this action."
+    end
   end
 
   def interest_params

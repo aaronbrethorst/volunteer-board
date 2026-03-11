@@ -49,7 +49,7 @@ class ProfileListingsControllerTest < ActionDispatch::IntegrationTest
   test "index shows empty state when no interests" do
     sign_in_as(@user)
     get profile_listings_path
-    assert_match(/haven.*applied/i, response.body)
+    assert_match(/No applications yet/i, response.body)
   end
 
   test "index does not display discarded listings" do

@@ -7,6 +7,40 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     @listing = listings(:open_listing)
   end
 
+  # --- Index ---
+
+  test "index requires authentication" do
+    get listing_interest_details_path(@listing)
+    assert_redirected_to new_session_path
+  end
+
+  test "index is accessible to org owners" do
+    Interest.create!(user: @user_two, listing: @listing, message: "Hello!")
+    sign_in_as(@user) # user one is an owner of org one
+    get listing_interest_details_path(@listing)
+    assert_response :success
+    assert_match @user_two.name, response.body
+  end
+
+  test "index denies non-owner members" do
+    sign_in_as(@user_two) # user two is a member but not owner
+    get listing_interest_details_path(@listing)
+    assert_redirected_to listing_path(@listing)
+  end
+
+  test "index denies non-members" do
+    non_member = User.create!(name: "Non Member", email_address: "nonmember@example.com", password: "password123")
+    sign_in_as(non_member)
+    get listing_interest_details_path(@listing)
+    assert_redirected_to listing_path(@listing)
+  end
+
+  test "index returns 404 for discarded listing" do
+    sign_in_as(@user)
+    get listing_interest_details_path(listings(:discarded_listing))
+    assert_response :not_found
+  end
+
   # --- New ---
 
   test "new redirects to sign-in when logged out and stores return URL" do
