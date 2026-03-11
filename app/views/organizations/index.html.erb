@@ -12,13 +12,19 @@
         <div class="flex items-center gap-4">
           <%= render OrganizationLogoComponent.new(organization: organization, size: :md) %>
 
-          <div>
+          <div class="flex-1 min-w-0">
             <h2 class="text-xl font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">
               <%= organization.name %>
             </h2>
             <% if organization.description.present? %>
               <p class="text-gray-600 text-sm mt-1"><%= truncate(organization.description, length: 150) %></p>
             <% end %>
+          </div>
+
+          <% count = organization.active_listings_count.to_i %>
+          <div class="text-right shrink-0 pl-4">
+            <span class="text-3xl font-bold <%= count > 0 ? 'text-amber-600' : 'text-gray-300' %>"><%= count %></span>
+            <p class="text-xs text-gray-400 mt-0.5"><%= "listing".pluralize(count) %></p>
           </div>
         </div>
       <% end %>

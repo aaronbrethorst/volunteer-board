@@ -5,7 +5,11 @@ class OrganizationsController < ApplicationController
   before_action :require_owner, only: %i[edit update]
 
   def index
-    @pagy, @organizations = pagy(Organization.kept.with_attached_logo.order(:name))
+    @pagy, @organizations = pagy(
+      Organization.kept.with_attached_logo
+        .select("organizations.*, (#{Listing.available.where("listings.organization_id = organizations.id").select("COUNT(*)").to_sql}) AS active_listings_count")
+        .order(:name)
+    )
   end
 
   def show
