@@ -49,9 +49,7 @@
       <p class="mt-2">
         <%= link_to organization_path(@listing.organization.slug),
             class: "inline-flex items-center gap-2 text-slate-300 hover:text-amber-300 transition-colors" do %>
-          <% if @listing.organization.logo.attached? %>
-            <%= image_tag @listing.organization.logo, class: "w-5 h-5 rounded object-cover ring-1 ring-white/20", alt: "" %>
-          <% end %>
+          <%= render OrganizationLogoComponent.new(organization: @listing.organization, size: :xs, variant: :dark) %>
           <span class="font-medium"><%= @listing.organization.name %></span>
         <% end %>
       </p>
@@ -105,15 +103,7 @@
       <h2 class="text-lg font-semibold text-gray-900 mb-4">About the Organization</h2>
       <%= link_to organization_path(@listing.organization.slug),
           class: "group flex items-center gap-4" do %>
-        <% if @listing.organization.logo.attached? %>
-          <%= image_tag @listing.organization.logo,
-              class: "w-14 h-14 rounded-xl object-cover ring-1 ring-gray-200 group-hover:ring-amber-300 transition-all shadow-sm",
-              alt: "#{@listing.organization.name} logo" %>
-        <% else %>
-          <div class="w-14 h-14 rounded-xl bg-amber-50 ring-1 ring-amber-200 group-hover:ring-amber-300 flex items-center justify-center transition-all shadow-sm">
-            <span class="text-xl font-bold text-amber-600"><%= @listing.organization.name.first.upcase %></span>
-          </div>
-        <% end %>
+        <%= render OrganizationLogoComponent.new(organization: @listing.organization, size: :lg, extra_classes: "group-hover:ring-amber-300 transition-all shadow-sm") %>
         <div>
           <p class="font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">
             <%= @listing.organization.name %>

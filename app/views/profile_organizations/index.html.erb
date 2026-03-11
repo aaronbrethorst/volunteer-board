@@ -11,13 +11,7 @@
           <li class="py-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <% if organization.logo.attached? %>
-                  <%= image_tag organization.logo, class: "h-10 w-10 rounded-full object-cover" %>
-                <% else %>
-                  <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                    <span class="text-indigo-700 font-semibold text-sm"><%= organization.name.first.upcase %></span>
-                  </div>
-                <% end %>
+                <%= render OrganizationLogoComponent.new(organization: organization, size: :sm) %>
                 <div>
                   <h3 class="text-lg font-medium">
                     <%= link_to organization.name, organization_path(organization.slug), class: "link" %>

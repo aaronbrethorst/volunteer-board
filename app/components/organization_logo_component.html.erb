@@ -1,0 +1,7 @@
+<% if logo_attached? %>
+  <%= image_tag @organization.logo, class: image_classes, alt: alt_text %>
+<% else %>
+  <div class="<%= fallback_classes %>">
+    <span class="<%= initial_classes %>"><%= initial %></span>
+  </div>
+<% end %>
