@@ -14,23 +14,14 @@
         </div>
       <% end %>
 
-      <div>
-        <%= form.label :name, class: "form-label" %>
-        <%= form.text_field :name, class: "form-control" %>
-      </div>
+      <%= render Form::TextFieldComponent.new(form: form, attribute: :name) %>
 
-      <div>
-        <%= form.label :bio, class: "form-label" %>
-        <%= form.text_area :bio, rows: 5, class: "form-control" %>
-      </div>
+      <%= render Form::TextAreaComponent.new(form: form, attribute: :bio, rows: 5) %>
 
-      <div>
-        <%= form.label :portfolio_url, "Portfolio URL", class: "form-label" %>
-        <%= form.url_field :portfolio_url, class: "form-control", placeholder: "https://yoursite.com" %>
-      </div>
+      <%= render Form::UrlFieldComponent.new(form: form, attribute: :portfolio_url, label: "Portfolio URL", placeholder: "https://yoursite.com") %>
 
       <div class="flex items-center gap-4">
-        <%= form.submit "Save Changes", class: "bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition cursor-pointer" %>
+        <%= render Form::SubmitButtonComponent.new(form: form, label: "Save Changes") %>
         <%= link_to "Cancel", user_path(@user), class: "text-gray-600 hover:text-gray-800" %>
       </div>
     <% end %>
