@@ -16,6 +16,8 @@
 
       <%= render Form::TextFieldComponent.new(form: form, attribute: :name) %>
 
+      <%= render Form::LabelComponent.new(label: "Email address", value: @user.email_address) %>
+
       <%= render Form::TextAreaComponent.new(form: form, attribute: :bio, rows: 5) %>
 
       <%= render Form::UrlFieldComponent.new(form: form, attribute: :portfolio_url, label: "Portfolio URL", placeholder: "https://yoursite.com") %>
