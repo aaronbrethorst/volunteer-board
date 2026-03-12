@@ -10,7 +10,7 @@
     </div>
   <% end %>
 
-  <%= render ::Form::TextFieldComponent.new(form: form, attribute: :name) %>
+  <%= render ::Form::TextFieldComponent.new(form: form, attribute: :name, autofocus: true) %>
   <%= render ::Form::TextAreaComponent.new(form: form, attribute: :description, rows: 5) %>
   <%= render ::Form::UrlFieldComponent.new(form: form, attribute: :website_url, label: "Website URL", placeholder: "https://yourorg.com") %>
   <%= render ::Form::UrlFieldComponent.new(form: form, attribute: :repo_url, label: "Repository URL", placeholder: "https://github.com/yourorg") %>

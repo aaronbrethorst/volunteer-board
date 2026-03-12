@@ -1,7 +1,27 @@
 <div class="w-full">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-1">Browse Listings</h1>
-    <p class="text-gray-500 text-sm">Find volunteer opportunities that match your skills.</p>
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-1">Browse Listings</h1>
+      <p class="text-gray-500 text-sm">Find volunteer opportunities that match your skills.</p>
+    </div>
+    <% if authenticated? %>
+      <% owned_orgs = Current.user.memberships.where(role: :owner).includes(:organization).map(&:organization).select(&:kept?) %>
+      <% if owned_orgs.size == 1 %>
+        <%= link_to new_organization_listing_path(owned_orgs.first.slug), class: "link-button" do %>
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            New Listing
+          </span>
+        <% end %>
+      <% elsif owned_orgs.size > 1 %>
+        <%= link_to profile_organizations_path, class: "link-button" do %>
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            New Listing
+          </span>
+        <% end %>
+      <% end %>
+    <% end %>
   </div>
 
   <%# Search bar %>
