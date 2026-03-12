@@ -113,28 +113,7 @@
     <% end %>
 
     <%# Flash messages %>
-    <% if flash.any? %>
-      <div class="w-full space-y-2">
-        <% flash.each do |type, message| %>
-          <% css_class = case type.to_s
-            when "notice"
-              "bg-blue-50 border-blue-400 text-blue-800"
-            when "success"
-              "bg-green-50 border-green-400 text-green-800"
-            when "alert", "error"
-              "bg-red-50 border-red-400 text-red-800"
-            else
-              "bg-gray-50 border-gray-400 text-gray-800"
-            end %>
-          <div class="border-l-4 p-4 flex justify-between items-center <%= css_class %>" data-controller="flash">
-            <p class="font-medium"><%= message %></p>
-            <button type="button" data-action="click->flash#dismiss" class="ml-4 shrink-0 text-current opacity-50 hover:opacity-75" aria-label="Dismiss">
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </button>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render FlashComponent.new(flash: flash) %>
 
     <% if content_for?(:main_content) %>
       <main class="flex-1">
