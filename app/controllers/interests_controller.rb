@@ -29,13 +29,13 @@ class InterestsController < ApplicationController
     @interest.user = Current.user
     @interest.save!
     NotifyOwnersOfInterest.new(@interest, exclude_user: Current.user).call
-    redirect_to listing_path(@listing)
+    redirect_to listing_path(@listing), notice: "Thanks for sharing your interest! We've shared your information with the organization."
   rescue ActiveRecord::RecordNotUnique
     redirect_to listing_path(@listing)
   end
 
   def show
-    @interest = @listing.interests.find(params[:id])
+    @interest = @listing.interests.includes(:user).find(params[:id])
 
     unless @listing.organization.memberships.exists?(user: Current.user)
       redirect_to listing_path(@listing)
