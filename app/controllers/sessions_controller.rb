@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   rate_limit to: 10, within: 1.minute, only: :create, with: -> { redirect_to new_session_path, alert: "Try again later." }
 
   def new
+    render layout: "minimal"
   end
 
   def create

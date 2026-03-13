@@ -1,4 +1,6 @@
-<% content_for(:main_content) do %>
+<%= extends_layout 'base' do %>
+  <%= render 'common/nav_bar' %>
+  <%= render FlashComponent.new(flash: flash) %>
   <div class="flex min-h-0 flex-1">
     <aside class="w-56 shrink-0 bg-white shadow-sm border-r border-gray-200 min-h-[calc(100vh-4rem)]">
       <nav class="p-4 space-y-1">
@@ -19,4 +21,3 @@
     </div>
   </div>
 <% end %>
-<%= render template: "layouts/application" %>
