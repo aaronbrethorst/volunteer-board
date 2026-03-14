@@ -156,7 +156,8 @@ namespace :dev do
         bio: bios.sample,
         portfolio_url: [ nil, nil, "https://#{first.downcase}#{last.downcase.gsub("'", "")}.dev", "https://github.com/#{first.downcase}#{last.downcase.gsub("'", "")}" ].sample,
         github_username: rand < 0.6 ? "#{first.downcase}#{last.downcase.gsub("'", "")}#{i}" : nil,
-        linkedin_username: rand < 0.4 ? "#{first.downcase}-#{last.downcase.gsub("'", "")}-#{rand(1000)}" : nil
+        linkedin_username: rand < 0.4 ? "#{first.downcase}-#{last.downcase.gsub("'", "")}-#{rand(1000)}" : nil,
+        email_confirmed_at: Time.current
       )
       users << user
     end

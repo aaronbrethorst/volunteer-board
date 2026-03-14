@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :listings, only: [ :index, :update ]
     resources :flags, only: [ :index, :update ]
     resources :users, only: :index
+    mount MissionControl::Jobs::Engine, at: "/jobs"
   end
 
   # OmniAuth callbacks

@@ -1,11 +1,17 @@
 <p>Hi <%= @recipient.name %>,</p>
 
 <p>
-  Someone has expressed interest in your listing
+  <%= @interest.user.name %> has expressed interest in your listing
   <strong><%= @listing.title %></strong>
   at <%= @organization.name %>.
 </p>
 
+<% if @interest.message.present? %>
+  <p><strong>Their message:</strong></p>
+  <blockquote><%= simple_format(@interest.message) %></blockquote>
+<% end %>
+
 <p>
   <%= link_to "View details", @interest_url %> to review their interest.
+  You can also reply directly to this email to respond.
 </p>
