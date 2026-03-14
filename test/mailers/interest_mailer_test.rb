@@ -48,11 +48,31 @@ class InterestMailerTest < ActionMailer::TestCase
     assert_not_nil mail.text_part, "Expected a text part"
   end
 
-  test "new_interest body does not reveal the interested user's identity" do
+  test "new_interest sets reply-to as the interested user's email" do
+    mail = InterestMailer.new_interest(@interest, @owner)
+
+    assert_equal [ @interested_user.email_address ], mail.reply_to
+  end
+
+  test "new_interest body includes the interested user's name" do
     mail = InterestMailer.new_interest(@interest, @owner)
     body = mail.body.encoded
 
-    assert_no_match @interested_user.name, body
-    assert_no_match @interested_user.email_address, body
+    assert_match @interested_user.name, body
+  end
+
+  test "new_interest body includes the interest message" do
+    mail = InterestMailer.new_interest(@interest, @owner)
+    body = mail.body.encoded
+
+    assert_match "I'd love to help!", body
+  end
+
+  test "new_interest body omits message section when message is blank" do
+    @interest.update!(message: "")
+    mail = InterestMailer.new_interest(@interest, @owner)
+    body = mail.body.encoded
+
+    assert_no_match "Their message", body
   end
 end

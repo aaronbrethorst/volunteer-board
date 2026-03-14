@@ -1,5 +1,13 @@
 Hi <%= @recipient.name %>,
 
-Someone has expressed interest in your listing "<%= @listing.title %>" at <%= @organization.name %>.
+<%= @interest.user.name %> has expressed interest in your listing "<%= @listing.title %>" at <%= @organization.name %>.
+<% if @interest.message.present? %>
+
+Their message:
+
+<%= @interest.message %>
+<% end %>
 
 View details: <%= @interest_url %>
+
+You can also reply directly to this email to respond.
