@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-VolunteerBoard is a Rails 8.1 application using Ruby 3.4.8, PostgreSQL, Propshaft (asset pipeline), Importmap (JS), and Hotwire (Turbo + Stimulus). Deployment is configured for Kamal with Docker.
+VolunteerBoard is a Rails 8.1 application using Ruby 4.0.6, PostgreSQL, Propshaft (asset pipeline), Importmap (JS), and Hotwire (Turbo + Stimulus). Deployment is configured for Kamal with Docker.
 
 ## Common Commands
 
