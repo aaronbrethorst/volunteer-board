@@ -93,7 +93,7 @@ config.before_send = ->(event, _hint) {
 - The nonce is identical for every page in a session, so a nonce leaked from any page (cache, HTML-injection, Referer to a third party) works on all pages for that session.
 - Probe tests showed the header as `script-src 'self' 'nonce-'` and `nonce=""` in the HTML when no session exists yet (test env). In production `csrf_meta_tags` usually forces a session, but an empty nonce is an invalid source and would block the inline importmap.
 
-**Fix:** use the current Rails default, `->(request) { SecureRandom.base64(16) }`. Turbo reads the nonce from the `csp-nonce` meta tag (`csp_meta_tag`), so make sure that's in `_head.html.erb`.
+**Fix:** use the current Rails default, `->(request) { SecureRandom.base64(16) }`. Turbo reads the nonce from the `csp-nonce` meta tag, which `_head.html.erb` already emits via `csp_meta_tag`.
 
 ### 6. Interests: `index` is owner-only, `show` is any member — Low
 
