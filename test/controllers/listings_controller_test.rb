@@ -204,4 +204,35 @@ class ListingsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_no_match "Interested Volunteers", response.body
   end
+
+  # --- Discarded organizations ---
+
+  test "show returns 404 for a listing of a discarded organization" do
+    get listing_path(listings(:discarded_org_listing))
+    assert_response :not_found
+  end
+
+  test "edit returns 404 for a listing of a discarded organization" do
+    sign_in_as @user_one
+    get edit_listing_path(listings(:discarded_org_listing))
+    assert_response :not_found
+  end
+
+  test "update returns 404 for a listing of a discarded organization" do
+    sign_in_as @user_one
+    patch listing_path(listings(:discarded_org_listing)), params: { listing: { title: "Changed" } }
+    assert_response :not_found
+    assert_equal "Listing At Discarded Org", listings(:discarded_org_listing).reload.title
+  end
+
+  test "index does not show listings of discarded organizations" do
+    get listings_path
+    assert_response :success
+    assert_no_match listings(:discarded_org_listing).title, response.body
+  end
+
+  test "index rejects hash-typed query and discipline params" do
+    get listings_path, params: { query: { a: "b" }, discipline: { a: "b" } }
+    assert_response :bad_request
+  end
 end

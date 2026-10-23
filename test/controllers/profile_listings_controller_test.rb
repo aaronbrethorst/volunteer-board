@@ -59,4 +59,12 @@ class ProfileListingsControllerTest < ActionDispatch::IntegrationTest
     get profile_listings_path
     assert_no_match discarded.title, response.body
   end
+
+  test "index excludes listings of discarded organizations" do
+    Interest.create!(user: @user, listing: listings(:discarded_org_listing))
+    sign_in_as @user
+    get profile_listings_path
+    assert_response :success
+    assert_no_match listings(:discarded_org_listing).title, response.body
+  end
 end

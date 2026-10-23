@@ -34,3 +34,12 @@ discarded_listing:
   status: 0
   discarded_at: 2026-01-01 00:00:00
   organization: one
+
+discarded_org_listing:
+  title: Listing At Discarded Org
+  discipline: 0
+  commitment: "~5 hrs/week"
+  location: Remote
+  skills: Go
+  status: 0
+  organization: discarded_org

@@ -53,4 +53,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     delete session_path
     assert_redirected_to new_session_path
   end
+
+  test "a session older than its lifetime no longer authenticates" do
+    sign_in_as @user
+    Current.session.update_column(:created_at, (Session::LIFETIME + 1.minute).ago)
+
+    get edit_profile_path
+    assert_redirected_to new_session_path
+  end
+
+  test "a session within its lifetime still authenticates" do
+    sign_in_as @user
+    Current.session.update_column(:created_at, (Session::LIFETIME - 1.hour).ago)
+
+    get edit_profile_path
+    assert_response :success
+  end
 end

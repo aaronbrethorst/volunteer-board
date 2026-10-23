@@ -211,4 +211,19 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil org
     assert_equal "slug-test-org", org.slug
   end
+
+  test "index shows each organization's own open listing count" do
+    get organizations_path
+    assert_response :success
+
+    expected = Listing.where(status: :open).kept.where(organization: @organization).count
+    assert_operator expected, :>, 0
+    assert_select "a[href=?]", organization_path(@organization.slug) do
+      assert_select "span", text: expected.to_s
+    end
+    # Org two has no open listings; the subquery must be scoped per organization.
+    assert_select "a[href=?]", organization_path(organizations(:two).slug) do
+      assert_select "span", text: "0"
+    end
+  end
 end

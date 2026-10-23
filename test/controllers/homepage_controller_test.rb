@@ -190,4 +190,24 @@ class HomepageControllerTest < ActionDispatch::IntegrationTest
       assert_select "select[name=discipline]"
     end
   end
+
+  # --- Moderation and malformed params ---
+
+  test "does not show listings of discarded organizations" do
+    get root_path
+    assert_response :success
+    assert_no_match listings(:discarded_org_listing).title, response.body
+  end
+
+  test "open roles count excludes listings of discarded organizations" do
+    get root_path
+    stat = Nokogiri::HTML(response.body).at_xpath("//p[normalize-space()='Open Roles']/preceding-sibling::p[1]")
+    assert_equal Listing.available.count.to_s, stat.text.strip
+    assert_not_equal Listing.where(status: :open).kept.count, Listing.available.count
+  end
+
+  test "hash-typed query and discipline params are rejected" do
+    get root_path, params: { query: { a: "b" }, discipline: { a: "b" } }
+    assert_response :bad_request
+  end
 end

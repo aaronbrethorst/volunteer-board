@@ -1,5 +1,6 @@
 class HomepageController < ApplicationController
   allow_unauthenticated_access
+  before_action :require_string_filter_params
 
   def show
     listings = Listing.available.includes(:organization).reverse_chronologically

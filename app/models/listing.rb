@@ -24,7 +24,9 @@ class Listing < ApplicationRecord
 
   enum :status, { open: 0, filled: 1, closed: 2 }
 
-  scope :available, -> { where(status: :open).kept }
+  # Kept listings whose organization is also kept (not moderated away).
+  scope :visible, -> { kept.joins(:organization).merge(Organization.kept) }
+  scope :available, -> { where(status: :open).visible }
   scope :chronologically, -> { order(created_at: :asc) }
   scope :reverse_chronologically, -> { order(created_at: :desc) }
 

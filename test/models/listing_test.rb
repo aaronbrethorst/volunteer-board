@@ -120,4 +120,17 @@ class ListingTest < ActiveSupport::TestCase
       assert_nil Listing.find_by(id: id)
     end
   end
+
+  # --- Visibility ---
+
+  test "visible excludes listings of discarded organizations" do
+    assert_includes Listing.visible, @listing
+    assert_not_includes Listing.visible, listings(:discarded_org_listing)
+    assert_not_includes Listing.visible, listings(:discarded_listing)
+  end
+
+  test "available excludes listings of discarded organizations" do
+    assert_not_includes Listing.available, listings(:discarded_org_listing)
+    assert_includes Listing.available, @listing
+  end
 end

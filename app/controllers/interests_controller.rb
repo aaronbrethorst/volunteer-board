@@ -2,6 +2,8 @@ class InterestsController < ApplicationController
   allow_unauthenticated_access only: %i[new]
 
   before_action :set_listing
+  before_action :require_open_listing, only: %i[new create]
+  before_action :require_confirmed_email, only: %i[create]
 
   def index
     require_owner
@@ -16,6 +18,8 @@ class InterestsController < ApplicationController
       redirect_to new_session_path
     elsif @listing.interests.exists?(user: Current.user)
       redirect_to listing_path(@listing)
+    else
+      require_confirmed_email
     end
   end
 
@@ -35,11 +39,10 @@ class InterestsController < ApplicationController
   end
 
   def show
-    @interest = @listing.interests.includes(:user).find(params[:id])
+    require_owner
+    return if performed?
 
-    unless @listing.organization.memberships.exists?(user: Current.user)
-      redirect_to listing_path(@listing)
-    end
+    @interest = @listing.interests.includes(:user).find(params[:id])
   end
 
   def destroy
@@ -51,7 +54,21 @@ class InterestsController < ApplicationController
   private
 
   def set_listing
-    @listing = Listing.kept.find(params[:listing_id])
+    @listing = Listing.visible.find(params[:listing_id])
+  end
+
+  def require_open_listing
+    unless @listing.open?
+      redirect_to listing_path(@listing), alert: "This listing is no longer accepting volunteers."
+    end
+  end
+
+  # The volunteer's email becomes the Reply-To on owner notifications, so it
+  # must be verified first.
+  def require_confirmed_email
+    unless Current.user.email_confirmed?
+      redirect_to listing_path(@listing), alert: "Please confirm your email address before expressing interest."
+    end
   end
 
   def require_owner

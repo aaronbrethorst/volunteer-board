@@ -22,7 +22,7 @@ class FlagsController < ApplicationController
     if params[:organization_slug]
       @flaggable = Organization.kept.find_by!(slug: params[:organization_slug])
     elsif params[:listing_id]
-      @flaggable = Listing.kept.find(params[:listing_id])
+      @flaggable = Listing.visible.find(params[:listing_id])
     else
       raise ActiveRecord::RecordNotFound
     end

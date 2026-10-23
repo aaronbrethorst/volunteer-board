@@ -7,7 +7,7 @@ class OrganizationsController < ApplicationController
   def index
     @pagy, @organizations = pagy(
       Organization.kept.with_attached_logo
-        .select("organizations.*, (#{Listing.available.where("listings.organization_id = organizations.id").select("COUNT(*)").to_sql}) AS active_listings_count")
+        .select("organizations.*, (#{Listing.where(status: :open).kept.where("listings.organization_id = organizations.id").select("COUNT(*)").to_sql}) AS active_listings_count")
         .order(:name)
     )
   end

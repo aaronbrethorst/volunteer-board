@@ -35,6 +35,27 @@ The codebase is in good shape overall: strong params everywhere, no raw SQL inte
 
 ---
 
+## Remediation status
+
+All findings below were fixed on this branch, each with tests written first and confirmed to fail against the original code. Full suite: 460 tests + 3 browser tests passing.
+
+| # | Status |
+|---|---|
+| 1 | Fixed in code: seed now requires `ADMIN_EMAIL`/`ADMIN_PASSWORD` in production, defaults to `admin@example.com` elsewhere, and marks the admin confirmed. **Action needed:** the existing production `admin@volunteerboard.org` account is unchanged — confirm you control that domain, or change its email and confirm it. |
+| 2 | Fixed: `Listing.visible` scope (kept listing + kept org) used by all public listing entry points |
+| 3 | Fixed: migrated to sentry-ruby 7's `data_collection` with cookies off. (Note: sentry-ruby 7's default deny-list already redacted the `session_id` cookie value, so the upgrade alone had reduced this risk.) |
+| 4 | Fixed: password never printed in production; existing admins are never modified by re-seeding |
+| 5 | Fixed: random per-request nonce. A browser test also showed the old nonce was **empty on a visitor's first page view**, which blocked the importmap and disabled all JS (Turbo/Stimulus/Trix) until a session existed. |
+| 6 | Fixed: interest detail is owner-only, matching the index |
+| 7 | Fixed: confirmed email required to express interest |
+| 8 | Fixed: interest only on open listings; the "I'm Interested" button is hidden otherwise (withdrawing still works) |
+| 9 | Fixed: known OmniAuth error keys map to fixed text; anything else gets a generic message |
+| 10 | Partly fixed: sessions older than `Session::LIFETIME` (2 weeks) are rejected server-side. Not done: cleanup job for expired rows, session list/revoke UI, `reset_session` on login |
+| 11 | Fixed: direct uploads require a signed-in user (401 otherwise) |
+| 12 | Fixed: non-string `query`/`discipline` returns 400 instead of 500 (the listings view also crashed on these) |
+
+**New finding while testing:** the Umami analytics script (`https://cloud.umami.is/script.js` in `common/_head.html.erb`) is blocked by the CSP's `script-src`, so analytics has not been collecting. Allowing it means trusting a third-party script origin; left for the owner to decide.
+
 ## Findings
 
 ### 1. Seeded site-admin email domain / unconfirmed admin — High (conditional)

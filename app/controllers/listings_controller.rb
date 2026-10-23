@@ -1,6 +1,7 @@
 class ListingsController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
 
+  before_action :require_string_filter_params, only: :index
   before_action :set_listing, only: %i[show edit update]
   before_action :require_membership, only: %i[edit update]
 
@@ -40,7 +41,7 @@ class ListingsController < ApplicationController
   private
 
   def set_listing
-    @listing = Listing.kept.find(params[:id])
+    @listing = Listing.visible.find(params[:id])
   end
 
   def require_membership

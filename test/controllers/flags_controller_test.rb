@@ -92,4 +92,10 @@ class FlagsControllerTest < ActionDispatch::IntegrationTest
     get new_listing_flag_path(listings(:discarded_listing))
     assert_response :not_found
   end
+
+  test "new listing flag returns 404 for a listing of a discarded organization" do
+    sign_in_as @user
+    get new_listing_flag_path(listings(:discarded_org_listing))
+    assert_response :not_found
+  end
 end

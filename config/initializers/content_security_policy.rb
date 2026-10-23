@@ -27,7 +27,7 @@ Rails.application.configure do
     policy.form_action :self, "https://github.com/login/oauth/authorize", "https://www.linkedin.com/oauth/"
   end
 
-  # Generate session nonces for permitted importmap and inline scripts.
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  # Generate a fresh random nonce per request for importmap and inline scripts.
+  config.content_security_policy_nonce_generator = ->(request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w[script-src]
 end

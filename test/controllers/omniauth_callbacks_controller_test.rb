@@ -172,7 +172,7 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     get "/auth/failure", params: { message: "invalid_credentials" }
 
     assert_redirected_to new_session_path
-    assert_equal "Authentication failed: invalid_credentials.", flash[:alert]
+    assert_equal "Authentication failed: invalid credentials.", flash[:alert]
   end
 
   # --- Edge case: missing email from OAuth ---
@@ -305,5 +305,12 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to edit_profile_path
     assert_match(/not supported|unknown/i, flash[:alert])
+  end
+
+  test "failure does not reflect arbitrary message text" do
+    get "/auth/failure", params: { message: "Your account is locked, call 555-0100" }
+
+    assert_redirected_to new_session_path
+    assert_equal "Authentication failed. Please try again.", flash[:alert]
   end
 end

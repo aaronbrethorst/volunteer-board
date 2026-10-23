@@ -184,12 +184,19 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  test "show is accessible to org members" do
+  test "show is accessible to org owners" do
     interest = Interest.create!(user: @user_two, listing: @listing, message: "Hello!")
-    sign_in_as(@user) # user one is a member of org one
+    sign_in_as(@user) # user one is an owner of org one
     get listing_interest_detail_path(@listing, interest)
     assert_response :success
     assert_select "p", text: "Hello!"
+  end
+
+  test "show denies non-owner members" do
+    interest = Interest.create!(user: users(:three), listing: @listing, message: "Hello!")
+    sign_in_as(@user_two) # user two is a plain member of org one
+    get listing_interest_detail_path(@listing, interest)
+    assert_redirected_to listing_path(@listing)
   end
 
   test "show denies non-members" do
@@ -228,6 +235,66 @@ class InterestsControllerTest < ActionDispatch::IntegrationTest
   test "destroy returns 404 for discarded listing" do
     sign_in_as(@user)
     delete listing_interest_path(listings(:discarded_listing))
+    assert_response :not_found
+  end
+
+  # --- Listing state and email confirmation ---
+
+  test "new redirects for a filled listing" do
+    sign_in_as(@user_two)
+    get new_listing_interest_path(listings(:filled_listing))
+    assert_redirected_to listing_path(listings(:filled_listing))
+  end
+
+  test "create is rejected for a filled listing" do
+    sign_in_as(@user_two)
+    assert_no_difference "Interest.count" do
+      assert_enqueued_emails 0 do
+        post listing_interest_path(listings(:filled_listing)), params: { interest: { message: "Hi" } }
+      end
+    end
+    assert_redirected_to listing_path(listings(:filled_listing))
+  end
+
+  test "create is rejected for a closed listing" do
+    sign_in_as(@user)
+    assert_no_difference "Interest.count" do
+      post listing_interest_path(listings(:closed_listing)), params: { interest: { message: "Hi" } }
+    end
+    assert_redirected_to listing_path(listings(:closed_listing))
+  end
+
+  test "destroy still works on a filled listing" do
+    listing = listings(:filled_listing)
+    Interest.create!(user: @user_two, listing: listing)
+    sign_in_as(@user_two)
+    assert_difference "Interest.count", -1 do
+      delete listing_interest_path(listing)
+    end
+  end
+
+  test "new redirects unconfirmed users" do
+    sign_in_as(users(:unconfirmed))
+    get new_listing_interest_path(@listing)
+    assert_redirected_to listing_path(@listing)
+    assert_match(/confirm your email/i, flash[:alert])
+  end
+
+  test "create is rejected for unconfirmed users and sends no email" do
+    sign_in_as(users(:unconfirmed))
+    assert_no_difference "Interest.count" do
+      assert_enqueued_emails 0 do
+        post listing_interest_path(@listing), params: { interest: { message: "Hi" } }
+      end
+    end
+    assert_redirected_to listing_path(@listing)
+  end
+
+  test "create returns 404 for a listing of a discarded organization" do
+    sign_in_as(@user_two)
+    assert_no_difference "Interest.count" do
+      post listing_interest_path(listings(:discarded_org_listing)), params: { interest: { message: "Hi" } }
+    end
     assert_response :not_found
   end
 end

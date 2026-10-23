@@ -4,6 +4,15 @@ class OmniauthCallbacksController < ApplicationController
 
   ALLOWED_PROVIDERS = %w[github linkedin].freeze
 
+  # Fixed text for known OmniAuth error keys, so the failure page never
+  # displays attacker-supplied text from the query string.
+  FAILURE_MESSAGES = {
+    "access_denied" => "Authentication was cancelled.",
+    "invalid_credentials" => "Authentication failed: invalid credentials.",
+    "csrf_detected" => "Authentication failed: the request could not be verified. Please try again.",
+    "timeout" => "Authentication timed out. Please try again."
+  }.freeze
+
   def create
     auth = request.env["omniauth.auth"]
 
@@ -40,8 +49,8 @@ class OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    message = params[:message] || "unknown error"
-    redirect_to new_session_path, alert: "Authentication failed: #{message}."
+    message = FAILURE_MESSAGES.fetch(params[:message].to_s, "Authentication failed. Please try again.")
+    redirect_to new_session_path, alert: message
   end
 
   private

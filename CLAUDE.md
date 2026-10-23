@@ -45,7 +45,7 @@ Authentication uses a custom concern (`Authentication` in `app/controllers/conce
 
 ## Key Model Patterns
 
-- **Soft-delete:** `Discardable` concern (`app/models/concerns/discardable.rb`) adds `discarded_at` timestamp with `discard`/`undiscard`/`kept?`/`discarded?` methods and `kept`/`discarded` scopes. Used by Organization and Listing. Controllers use `.kept` to exclude soft-deleted records.
+- **Soft-delete:** `Discardable` concern (`app/models/concerns/discardable.rb`) adds `discarded_at` timestamp with `discard`/`undiscard`/`kept?`/`discarded?` methods and `kept`/`discarded` scopes. Used by Organization and Listing. Controllers use `.kept` to exclude soft-deleted records. For listings, public-facing code uses `Listing.visible` (kept listing *and* kept organization) or `Listing.available` (visible + open), so discarding an organization hides its listings.
 - **Slug routing:** Organizations use `param: :slug` in routes and `to_param` returning slug. Look up with `find_by!(slug:)`.
 - **Polymorphic flagging:** Flag model uses `belongs_to :flaggable, polymorphic: true` for both Organizations and Listings. The controller resolves the flaggable from route params (not user-controlled type strings).
 - **Enums:** Listing has `discipline` and `status` enums; Membership has `role` enum; Flag has `status` enum. All use integer-backed values.
@@ -66,3 +66,4 @@ All admin controllers inherit from `Admin::BaseController` which enforces `site_
 - **`sign_in_as(user)`** helper in `test/test_helpers/session_test_helper.rb` for controller tests.
 - **`count_queries(&block)`** helper in `test/test_helpers/query_counter_helper.rb` for N+1 detection.
 - Tests are integration tests (`ActionDispatch::IntegrationTest`) for controllers, not functional tests.
+- System tests (`test/system/`, `bin/rails test:system`) run headless Chrome and guard the CSP + importmap + Stimulus + Trix stack, which controller tests can't see. Set `CHROME_BIN` to point at a non-default Chrome binary.
